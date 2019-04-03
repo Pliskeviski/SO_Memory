@@ -47,5 +47,11 @@
     <ClInclude Include="Helper\Meditor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Helper\Node.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Memoria\EspacoMemoria.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

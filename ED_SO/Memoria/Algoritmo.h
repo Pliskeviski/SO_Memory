@@ -10,10 +10,16 @@ public:
 	Algoritmo();
 	void Init(const char* filePath);
 	void Insere(Processo p);
-	void Remove(Processo p);
+	void Remove(const char* nome);
+
+	void Print();
 
 protected:
+	void OrdenaOcupados();
+
 	virtual ~Algoritmo();
+	
+	void InserePosicao(Processo* p, Node* node);
 	
 	/*
 		Insere um novo processo na "memoria"
@@ -23,7 +29,7 @@ protected:
 	/*
 		Remove um processo da "memoria"
 	*/
-	virtual void RemoveProcesso(Processo p) = 0;
+	virtual void RemoveProcesso(const char* nome) = 0;
 
 	Lista<Processo>* l_livres_ocupados;
 	Lista<Processo>* l_livres;

@@ -1,30 +1,27 @@
 #pragma once
 #include <iostream>
 
+#include "../Helper/Node.h"
 
-struct Node {
-	Node() {}
-	Node(void* conteudo) : conteudo(conteudo), proximo(NULL) {}
-
-	void* conteudo;
-	Node* proximo;
-};
-
-template<typename T>
+template<typename T = Node>
 class Lista {
 public:
 	Lista();
-	bool Inserir(T* item);
+	Node* Inserir(T* item);
+	Node* InserirConteudo(T* conteudo, Node* node);
 	void Remover(T item);
+	bool RemoverConteudo(T node);
 
 	void Print();
 
-	T get(int index);
+	int GetSize();
+
+	Node* get(int index);
 	~Lista();
 private:
+	unsigned int size;
 	Node* cabeca;
 	Node* ultimo;
-	unsigned int size;
 };
 
 template<typename T>
@@ -35,26 +32,31 @@ inline Lista<T>::Lista() {
 }
 
 template<typename T>
-inline bool Lista<T>::Inserir(T* item) {
+inline Node* Lista<T>::Inserir(T* item) {
 	if (this->cabeca == NULL) {
 		this->cabeca = new Node(item);
 		this->ultimo = cabeca;
 		this->size++;
-		return true;
+		return this->cabeca;
 	}
 
 	try {
 		auto novo = new Node(item);
 		ultimo->proximo = novo;
 		ultimo = novo;
+		this->size++;
+		return novo;
 	}
 	catch (int e) {
 		std::cout << "Erro ao inserir na Lista. " << e << std::endl;
-		return false;
+		return NULL;
 	}
+}
 
-	this->size++;
-	return true;
+template<typename T>
+inline Node* Lista<T>::InserirConteudo(T* conteudo, Node* node) {
+	node->conteudo = conteudo;
+	return node;
 }
 
 template<typename T>
@@ -87,20 +89,51 @@ inline void Lista<T>::Remover(T item) {
 }
 
 template<typename T>
-inline void Lista<T>::Print() {
-	auto node = this->cabeca;
-	for (; node != NULL; node = node->proximo)
-		std::cout << *(int*)node->conteudo << std::endl;
+inline bool Lista<T>::RemoverConteudo(T conteudo) {
+	Node* prev = this->cabeca;
+	Node* node = this->cabeca->proximo;
+
+	if (prev != NULL && *(T*)prev->conteudo == conteudo) {
+		this->cabeca->conteudo = NULL;
+		return true;
+	}
+
+	for (; node != NULL; node = node->proximo) {
+		if (*(T*)node->conteudo == conteudo) {
+			node->conteudo = NULL;
+			return true;
+		}
+
+		prev = node;
+	}
+
+	return false;
 }
 
 template<typename T>
-inline T Lista<T>::get(int index) {
+inline void Lista<T>::Print() {
+	auto node = this->cabeca;
+	for (; node != NULL; node = node->proximo) {
+		if (node->conteudo != NULL)
+			std::cout << *(T*)node->conteudo << std::endl;
+		else
+			std::cout << "NULL" << std::endl;
+	}
+}
+
+template<typename T>
+inline int Lista<T>::GetSize() {
+	return this->size;
+}
+
+template<typename T>
+inline Node* Lista<T>::get(int index) {
 	auto node = this->cabeca;
 	for (int i = 0; i <= index; i++) {
 		if (node == NULL) break;
 
 		if (i == index)
-			return *(T*)node->conteudo;
+			return node;
 		
 		node = node->proximo;
 	}

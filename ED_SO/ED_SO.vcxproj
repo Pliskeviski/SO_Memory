@@ -123,7 +123,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GerarArquivo\GerarArquivo.h" />
+    <ClInclude Include="Memoria\EspacoMemoria.h" />
     <ClInclude Include="Helper\Meditor.h" />
+    <ClInclude Include="Helper\Node.h" />
     <ClInclude Include="Lista\Lista.h" />
     <ClInclude Include="Memoria\Algoritmo.h" />
     <ClInclude Include="Memoria\Algoritmos\FirstFit.h" />

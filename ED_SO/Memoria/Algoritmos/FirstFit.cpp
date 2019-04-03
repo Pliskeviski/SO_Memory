@@ -1,17 +1,24 @@
 #include "FirstFit.h"
 
-FirstFit::FirstFit() : Algoritmo() { 
-	
+FirstFit::FirstFit() : Algoritmo() {
 }
 
 void FirstFit::InsereProcesso(Processo* p) {
-	
-	std::cout << "Inserindo processo " << p->Nome << std::endl;
+	for (int i = 0; i < this->l_livres_ocupados->GetSize(); i++) {
+		auto node = this->l_livres_ocupados->get(i);
+		if (node->conteudo == NULL) {
+			std::cout << "Inserindo processo " << p->Nome << std::endl;
+			this->InserePosicao(p, node);
+			return;
+		}
+	}
 
-	this->l_livres_ocupados->Inserir(p);
+	std::cout << "Nenhuma posicao livre foi encontrada\n";
 }
 
-void FirstFit::RemoveProcesso(Processo p) {
-	this->l_livres_ocupados->Remover(p);
+void FirstFit::RemoveProcesso(const char* nome) {
+	Processo p(nome);
+	this->l_livres_ocupados->RemoverConteudo(p);
+	this->l_ocupados->Remover(p);
 }
 
