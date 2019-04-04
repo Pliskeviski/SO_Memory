@@ -119,16 +119,19 @@
     <ClCompile Include="GerarArquivo\GerarArquivo.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Memoria\Algoritmo.cpp" />
+    <ClCompile Include="Memoria\Algoritmos\BestFit.cpp" />
     <ClCompile Include="Memoria\Algoritmos\FirstFit.cpp" />
+    <ClCompile Include="Memoria\Algoritmos\WorstFit.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GerarArquivo\GerarArquivo.h" />
-    <ClInclude Include="Memoria\EspacoMemoria.h" />
+    <ClInclude Include="Memoria\Algoritmos\BestFit.h" />
     <ClInclude Include="Helper\Meditor.h" />
     <ClInclude Include="Helper\Node.h" />
     <ClInclude Include="Lista\Lista.h" />
     <ClInclude Include="Memoria\Algoritmo.h" />
     <ClInclude Include="Memoria\Algoritmos\FirstFit.h" />
+    <ClInclude Include="Memoria\Algoritmos\WorstFit.h" />
     <ClInclude Include="Memoria\Processo.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

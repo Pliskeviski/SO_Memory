@@ -8,7 +8,7 @@
 class Algoritmo {
 public:
 	Algoritmo();
-	void Init(const char* filePath);
+	int Init(const char* filePath);
 	void Insere(Processo p);
 	void Remove(const char* nome);
 
@@ -29,17 +29,17 @@ protected:
 	/*
 		Remove um processo da "memoria"
 	*/
-	virtual void RemoveProcesso(const char* nome) = 0;
+	virtual void RemoveProcesso(const char* nome);
 
 	Lista<Processo>* l_livres_ocupados;
-	Lista<Processo>* l_livres;
+	Lista<>* l_livres;
 	Lista<Processo>* l_ocupados;
-	Lista<Processo>* l_ocupados_ordenado;
+	Lista<>* l_ocupados_ordenado;
 
 private:
 	/*
 		Carrega os Processos do arquivo para um vetor
 	*/
-	void CarregaProcessosArquivo(const char* filePath);
+	int CarregaProcessosArquivo(const char* filePath);
 	std::vector<Processo> processos_arquivo;
 };

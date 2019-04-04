@@ -8,7 +8,7 @@ void GerarArquivo::NovoArquivo(const char* fileName, unsigned int amount) {
 	for (int i = amount; i >= 0; i--) {
 
 		unsigned int st = rand() % 500 + 1;
-		unsigned int nd = rand() % 1 + 0;
+		unsigned int nd = rand() % 2 + 0;
 
 		fprintf(f, "P%d %d %d\n", i, st, nd);
 	}

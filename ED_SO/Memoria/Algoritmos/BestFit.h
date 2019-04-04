@@ -5,7 +5,6 @@
 class BestFit : public Algoritmo {
 public:
 	BestFit();
-	void InsereProcesso();
-	void RemoveProcesso();
+	void InsereProcesso(Processo* p) override;
 private:
 };

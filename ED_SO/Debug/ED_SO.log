@@ -1,8 +1,2 @@
-﻿  Algoritmo.cpp
-c:\users\gusta\documents\ed_so\ed_so\memoria\algoritmo.cpp(9): error C2440: '=': cannot convert from 'Lista<Node> *' to 'Lista<Processo> *'
-  c:\users\gusta\documents\ed_so\ed_so\memoria\algoritmo.cpp(9): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
-c:\users\gusta\documents\ed_so\ed_so\memoria\algoritmo.cpp(11): error C2440: '=': cannot convert from 'Lista<Node> *' to 'Lista<Processo> *'
-  c:\users\gusta\documents\ed_so\ed_so\memoria\algoritmo.cpp(11): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
-  FirstFit.cpp
-  main.cpp
-  Generating Code...
+﻿  main.cpp
+  ED_SO.vcxproj -> C:\Users\gusta\Documents\Faculade\SO\Git\Debug\ED_SO.exe

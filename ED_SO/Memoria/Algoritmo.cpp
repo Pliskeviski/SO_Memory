@@ -11,14 +11,16 @@ Algoritmo::Algoritmo() {
 	this->l_ocupados_ordenado = new Lista<>();
 }
 
-void Algoritmo::Init(const char* filePath) {
-	this->CarregaProcessosArquivo(filePath);
+int Algoritmo::Init(const char* filePath) {
+	if (this->CarregaProcessosArquivo(filePath) == -1) return -1;
 
 	for (Processo p : this->processos_arquivo) {
 		Processo* processo = new Processo(p.Nome.c_str(), p.Alocacao, p.EspacoMemoria);
 		this->l_livres_ocupados->Inserir(processo);
 		this->l_ocupados->Inserir(processo);
 	}
+	
+	return 0;
 }
 
 void Algoritmo::InserePosicao(Processo* p, Node* node) {
@@ -26,11 +28,17 @@ void Algoritmo::InserePosicao(Processo* p, Node* node) {
 	this->l_ocupados->Inserir(p);
 }
 
-void Algoritmo::CarregaProcessosArquivo(const char* filePath) {
+void Algoritmo::RemoveProcesso(const char* nome) {
+	Processo p(nome);
+	this->l_livres_ocupados->RemoverConteudo(p);
+	this->l_ocupados->Remover(p);
+}
+
+int Algoritmo::CarregaProcessosArquivo(const char* filePath) {
 	FILE* file = std::fopen(filePath, "r+");
 	if (!file) {
 		std::cout << "Erro ao abrir o arquivo\n";
-		return;
+		return -1;
 	}
 
 	char nome[12];
@@ -41,6 +49,8 @@ void Algoritmo::CarregaProcessosArquivo(const char* filePath) {
 		if (this->processos_arquivo.size() >= MAX) break;
 
 	fclose(file);
+
+	return 0;
 }
 
 void Algoritmo::OrdenaOcupados() {

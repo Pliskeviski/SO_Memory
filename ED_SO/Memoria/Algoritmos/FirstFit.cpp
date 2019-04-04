@@ -15,10 +15,3 @@ void FirstFit::InsereProcesso(Processo* p) {
 
 	std::cout << "Nenhuma posicao livre foi encontrada\n";
 }
-
-void FirstFit::RemoveProcesso(const char* nome) {
-	Processo p(nome);
-	this->l_livres_ocupados->RemoverConteudo(p);
-	this->l_ocupados->Remover(p);
-}
-

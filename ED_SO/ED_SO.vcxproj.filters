@@ -27,6 +27,12 @@
     <ClCompile Include="Memoria\Algoritmos\FirstFit.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Memoria\Algoritmos\BestFit.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Memoria\Algoritmos\WorstFit.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GerarArquivo\GerarArquivo.h">
@@ -50,7 +56,10 @@
     <ClInclude Include="Helper\Node.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Memoria\EspacoMemoria.h">
+    <ClInclude Include="Memoria\Algoritmos\BestFit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Memoria\Algoritmos\WorstFit.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

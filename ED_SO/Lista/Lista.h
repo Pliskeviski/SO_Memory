@@ -93,13 +93,13 @@ inline bool Lista<T>::RemoverConteudo(T conteudo) {
 	Node* prev = this->cabeca;
 	Node* node = this->cabeca->proximo;
 
-	if (prev != NULL && *(T*)prev->conteudo == conteudo) {
+	if (prev != NULL && prev->conteudo != NULL && *(T*)prev->conteudo == conteudo) {
 		this->cabeca->conteudo = NULL;
 		return true;
 	}
 
 	for (; node != NULL; node = node->proximo) {
-		if (*(T*)node->conteudo == conteudo) {
+		if (node->conteudo != NULL && *(T*)node->conteudo == conteudo) {
 			node->conteudo = NULL;
 			return true;
 		}
