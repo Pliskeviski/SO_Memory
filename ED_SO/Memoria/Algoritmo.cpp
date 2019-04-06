@@ -2,6 +2,10 @@
 
 #include "../Helper/Meditor.h"
 
+#include <algorithm> 
+#include <chrono> 
+using namespace std::chrono;
+
 #define MAX 10
 
 Algoritmo::Algoritmo() {
@@ -93,6 +97,8 @@ void Algoritmo::OrganizaLivres() {
 			sequencia = 0;
 		}
 	}
+
+	BubbleSort::bubbleSort(this->l_livres);
 }
 
 void Algoritmo::OrganizaOcupadasOrdem() {
@@ -117,10 +123,11 @@ void Algoritmo::Insere(Processo p, bool dinamica) {
 		this->InsereProcesso(processo);
 
 	this->OrganizaListas();
-	
+
 	auto t = tempo.Fim();
 	
-	//std::cout << "Tempo: " << t << " ms" << std::endl;
+	if(!dinamica)
+		std::cout << "Tempo: " << t << " Microseconds" << std::endl;
 }
 
 void Algoritmo::Remove(const char* nome) {

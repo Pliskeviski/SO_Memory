@@ -10,7 +10,7 @@ public:
 	}
 
 	long long Fim() {
-		auto duration = std::chrono::duration_cast<std::chrono::milliseconds>
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>
 			(std::chrono::steady_clock::now() - start).count(); // Termina e calcula o tempo gasto
 
 		return duration;
