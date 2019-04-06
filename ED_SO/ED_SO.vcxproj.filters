@@ -33,6 +33,9 @@
     <ClCompile Include="Memoria\Algoritmos\WorstFit.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Memoria\EspacoMemoria.h">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GerarArquivo\GerarArquivo.h">

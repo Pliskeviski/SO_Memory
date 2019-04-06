@@ -1,2 +1,7 @@
-﻿  main.cpp
+﻿  Algoritmo.cpp
+  BestFit.cpp
+  FirstFit.cpp
+  WorstFit.cpp
+  main.cpp
+  Generating Code...
   ED_SO.vcxproj -> C:\Users\gusta\Documents\Faculade\SO\Git\Debug\ED_SO.exe

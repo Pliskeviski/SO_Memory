@@ -3,6 +3,7 @@
 
 #include "Processo.h"
 #include "../Lista/Lista.h"
+#include "EspacoMemoria.h"
 
 // Classe base para a implementacao dos algoritmos
 class Algoritmo {
@@ -15,7 +16,7 @@ public:
 	void Print();
 
 protected:
-	void OrdenaOcupados();
+	void OrganizaOcupados();
 
 	virtual ~Algoritmo();
 	
@@ -31,10 +32,12 @@ protected:
 	*/
 	virtual void RemoveProcesso(const char* nome);
 
-	Lista<Processo>* l_livres_ocupados;
-	Lista<>* l_livres;
-	Lista<Processo>* l_ocupados;
-	Lista<>* l_ocupados_ordenado;
+	Lista<Processo>* l_memoria_principal;
+
+	Lista<EspacoMemoria>* l_livres_ocupados;
+	Lista<EspacoMemoria>* l_livres;
+	Lista<EspacoMemoria>* l_ocupados;
+	Lista<EspacoMemoria>* l_ocupados_ordenado;
 
 private:
 	/*

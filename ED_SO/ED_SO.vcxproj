@@ -122,6 +122,7 @@
     <ClCompile Include="Memoria\Algoritmos\BestFit.cpp" />
     <ClCompile Include="Memoria\Algoritmos\FirstFit.cpp" />
     <ClCompile Include="Memoria\Algoritmos\WorstFit.cpp" />
+    <ClCompile Include="Memoria\EspacoMemoria.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GerarArquivo\GerarArquivo.h" />

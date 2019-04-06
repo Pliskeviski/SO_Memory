@@ -15,8 +15,8 @@ void BestFit::InsereProcesso(Processo* p) {
 	bool ultimoNulo = false;
 
 	// Procura as sequencias de nulos na memoria
-	for (int i = 0; i < this->l_livres_ocupados->GetSize(); i++) {
-		auto node = this->l_livres_ocupados->get(i);
+	for (int i = 0; i < this->l_memoria_principal->GetSize(); i++) {
+		auto node = this->l_memoria_principal->get(i);
 		
 		if (node->conteudo == NULL) {
 			if (ultimoNulo == false)
@@ -33,7 +33,7 @@ void BestFit::InsereProcesso(Processo* p) {
 	}
 
 	// Recupera o melhor index (menor sequencia de nulos)
-	int menorSequencia = this->l_livres_ocupados->GetSize();
+	int menorSequencia = this->l_memoria_principal->GetSize();
 	int melhorIndex = -1;
 	for (auto x : umap) {
 		if (x.second < menorSequencia) {
@@ -45,5 +45,5 @@ void BestFit::InsereProcesso(Processo* p) {
 	if(melhorIndex == -1)
 		std::cout << "Nenhuma posicao livre foi encontrada\n";
 	else
-		this->InserePosicao(p, this->l_livres_ocupados->get(melhorIndex));
+		this->InserePosicao(p, this->l_memoria_principal->get(melhorIndex));
 }

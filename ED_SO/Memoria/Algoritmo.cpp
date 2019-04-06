@@ -5,10 +5,11 @@
 #define MAX 10
 
 Algoritmo::Algoritmo() {
-	this->l_livres_ocupados = new Lista<Processo>();
-	this->l_livres = new Lista<>();
-	this->l_ocupados = new Lista<Processo>();
-	this->l_ocupados_ordenado = new Lista<>();
+	this->l_memoria_principal = new Lista<Processo>();
+	this->l_livres_ocupados = new Lista<EspacoMemoria>();
+	this->l_livres = new Lista<EspacoMemoria>();
+	this->l_ocupados = new Lista<EspacoMemoria>();
+	this->l_ocupados_ordenado = new Lista<EspacoMemoria>();
 }
 
 int Algoritmo::Init(const char* filePath) {
@@ -16,22 +17,22 @@ int Algoritmo::Init(const char* filePath) {
 
 	for (Processo p : this->processos_arquivo) {
 		Processo* processo = new Processo(p.Nome.c_str(), p.Alocacao, p.EspacoMemoria);
-		this->l_livres_ocupados->Inserir(processo);
-		this->l_ocupados->Inserir(processo);
+		this->l_memoria_principal->Inserir(processo);
+		//this->l_ocupados->Inserir(processo);
 	}
 	
 	return 0;
 }
 
 void Algoritmo::InserePosicao(Processo* p, Node* node) {
-	auto n = this->l_livres_ocupados->InserirConteudo(p, node);
-	this->l_ocupados->Inserir(p);
+	auto n = this->l_memoria_principal->InserirConteudo(p, node);
+	//this->l_ocupados->Inserir(p);
 }
 
 void Algoritmo::RemoveProcesso(const char* nome) {
 	Processo p(nome);
-	this->l_livres_ocupados->RemoverConteudo(p);
-	this->l_ocupados->Remover(p);
+	this->l_memoria_principal->RemoverConteudo(p);
+	//this->l_ocupados->Remover(p);
 }
 
 int Algoritmo::CarregaProcessosArquivo(const char* filePath) {
@@ -53,7 +54,10 @@ int Algoritmo::CarregaProcessosArquivo(const char* filePath) {
 	return 0;
 }
 
-void Algoritmo::OrdenaOcupados() {
+void Algoritmo::OrganizaOcupados() {
+	for (int i = 0; i < this->l_memoria_principal->GetSize(); i++) {
+
+	}
 }
 
 void Algoritmo::Insere(Processo p) {
@@ -63,7 +67,7 @@ void Algoritmo::Insere(Processo p) {
 
 	this->InsereProcesso(processo);
 	
-	this->OrdenaOcupados();
+	this->OrganizaOcupados();
 	
 	auto t = tempo.Fim();
 	std::cout << "Tempo: " << t << " ms" << std::endl;
@@ -74,16 +78,17 @@ void Algoritmo::Remove(const char* nome) {
 }
 
 void Algoritmo::Print() {
-	std::cout << "Livres Ocupados\n";
-	this->l_livres_ocupados->Print();
+	std::cout << "Memoria principal\n";
+	this->l_memoria_principal->Print();
 	
-	std::cout << "Ocupados\n";
-	this->l_ocupados->Print();
+	//std::cout << "Ocupados\n";
+	//this->l_ocupados->Print();
 }
 
 Algoritmo::~Algoritmo() {
-	delete l_livres_ocupados;
-	delete l_livres;
-	delete l_ocupados;
-	delete l_ocupados_ordenado;
+	delete this->l_memoria_principal;
+	delete this->l_livres_ocupados;
+	delete this->l_livres;
+	delete this->l_ocupados;
+	delete this->l_ocupados_ordenado;
 }

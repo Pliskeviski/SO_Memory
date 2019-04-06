@@ -15,8 +15,8 @@ void WorstFit::InsereProcesso(Processo* p) {
 	bool ultimoNulo = false;
 
 	// Procura as sequencias de nulos na memoria
-	for (int i = 0; i < this->l_livres_ocupados->GetSize(); i++) {
-		auto node = this->l_livres_ocupados->get(i);
+	for (int i = 0; i < this->l_memoria_principal->GetSize(); i++) {
+		auto node = this->l_memoria_principal->get(i);
 
 		if (node->conteudo == NULL) {
 			if (ultimoNulo == false)
@@ -45,5 +45,5 @@ void WorstFit::InsereProcesso(Processo* p) {
 	if (melhorIndex == -1)
 		std::cout << "Nenhuma posicao livre foi encontrada\n";
 	else
-		this->InserePosicao(p, this->l_livres_ocupados->get(melhorIndex));
+		this->InserePosicao(p, this->l_memoria_principal->get(melhorIndex));
 }
