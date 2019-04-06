@@ -11,6 +11,8 @@ public:
 	Node* InserirConteudo(T* conteudo, Node* node);
 	void Remover(T item);
 	bool RemoverConteudo(T node);
+	
+	void Reset();
 
 	void Print();
 
@@ -34,14 +36,14 @@ inline Lista<T>::Lista() {
 template<typename T>
 inline Node* Lista<T>::Inserir(T* item) {
 	if (this->cabeca == NULL) {
-		this->cabeca = new Node(item);
+		this->cabeca = new Node(item, this->size);
 		this->ultimo = cabeca;
 		this->size++;
 		return this->cabeca;
 	}
 
 	try {
-		auto novo = new Node(item);
+		auto novo = new Node(item, this->size);
 		ultimo->proximo = novo;
 		ultimo = novo;
 		this->size++;
@@ -108,6 +110,23 @@ inline bool Lista<T>::RemoverConteudo(T conteudo) {
 	}
 
 	return false;
+}
+
+template<typename T>
+inline void Lista<T>::Reset() {
+	while (this->cabeca != NULL) {
+
+		if(this->cabeca->conteudo != NULL)
+			delete this->cabeca->conteudo;
+
+		Node* cabeca = this->cabeca;
+		Node* proximo = this->cabeca->proximo;
+		delete cabeca;
+
+		this->cabeca = proximo;
+	}
+
+	this->size = 0;
 }
 
 template<typename T>

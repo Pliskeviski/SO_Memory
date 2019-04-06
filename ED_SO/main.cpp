@@ -9,43 +9,22 @@
 int main(int argc, char *argv[]) {
 	GerarArquivo::NovoArquivo("processos.txt", 10);
 	
-	/*FirstFit* firstFit = new FirstFit();
-	firstFit->Init("processos.txt");
 	
-	firstFit->Remove("P5");
-
-	firstFit->Insere(Processo("Teste", false, 100));
-	
-	firstFit->Remove("P6");
-	firstFit->Remove("P1");
-
-	firstFit->Print();*/
-
-	/*BestFit* bestfit = new BestFit();
-	if(bestfit->Init("processos.txt") == -1) return -1;
+	WorstFit* bestfit = new WorstFit();
+	if (bestfit->Init("processos.txt") == -1) return -1;
 
 	bestfit->Remove("P1");
 	bestfit->Remove("P2");
-	bestfit->Remove("P3");
-	bestfit->Remove("P5");
-	bestfit->Remove("P6");
+
+	//worstfit->Remove("P5");
+
+	bestfit->Remove("P7");
+	bestfit->Remove("P8");
+	bestfit->Remove("P9");
 
 	bestfit->Insere(Processo("Teste", false, 100));
 
-	bestfit->Print();*/
-	
-	WorstFit* worstfit = new WorstFit();
-	if (worstfit->Init("processos.txt") == -1) return -1;
-
-	worstfit->Remove("P1");
-	worstfit->Remove("P2");
-	worstfit->Remove("P3");
-	worstfit->Remove("P5");
-	worstfit->Remove("P6");
-
-	worstfit->Insere(Processo("Teste", false, 100));
-
-	worstfit->Print();
+	bestfit->Print();
 
 	std::cin.get();
 }

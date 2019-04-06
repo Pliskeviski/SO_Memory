@@ -10,31 +10,35 @@ class Algoritmo {
 public:
 	Algoritmo();
 	int Init(const char* filePath);
-	void Insere(Processo p);
+
+	/*
+		dinamica = true
+			cria um novo nó
+		dinamica = false
+			trabalha com os nós já existentes na lista
+	*/
+	void Insere(Processo p, bool dinamica = false);
 	void Remove(const char* nome);
 
 	void Print();
 
 protected:
-	void OrganizaOcupados();
-
 	virtual ~Algoritmo();
 	
-	void InserePosicao(Processo* p, Node* node);
+	Node* InserePosicao(Processo* p, Node* node);
 	
 	/*
 		Insere um novo processo na "memoria"
 	*/
-	virtual void InsereProcesso(Processo* p) = 0;
+	virtual void* InsereProcesso(Processo* p) = 0;
 
 	/*
 		Remove um processo da "memoria"
 	*/
 	virtual void RemoveProcesso(const char* nome);
 
-	Lista<Processo>* l_memoria_principal;
+	Lista<Processo>* l_livres_ocupados; // Memoria principal
 
-	Lista<EspacoMemoria>* l_livres_ocupados;
 	Lista<EspacoMemoria>* l_livres;
 	Lista<EspacoMemoria>* l_ocupados;
 	Lista<EspacoMemoria>* l_ocupados_ordenado;
@@ -45,4 +49,31 @@ private:
 	*/
 	int CarregaProcessosArquivo(const char* filePath);
 	std::vector<Processo> processos_arquivo;
+
+	void OrganizaListas();
+	void OrganizaOcupados();
+	void OrganizaLivres();
+	void OrganizaOcupadasOrdem();
+};
+
+
+class BubbleSort {
+public:
+	static void bubbleSort(Lista<EspacoMemoria>* lista) {
+		int n = lista->GetSize();
+
+		int i, j;
+		for (i = 0; i < n - 1; i++)
+			for (j = 0; j < n - i - 1; j++) {
+				if (((EspacoMemoria*)lista->get(j)->conteudo)->sequencia > ((EspacoMemoria*)lista->get(j + 1)->conteudo)->sequencia)
+					swap(lista, j, j + 1);
+			}
+	}
+
+private:
+	static void swap(Lista<EspacoMemoria>* lista, int i, int j) {
+		void* temp = lista->get(i)->conteudo;
+		lista->get(i)->conteudo = lista->get(j)->conteudo;
+		lista->get(j)->conteudo = temp;
+	}
 };
