@@ -46,6 +46,10 @@ public:
 		this->itens_menu[entrada].funcao();
 	}
 
+	void Sair() {
+		exit(0);
+	}
+
 private:
 	std::vector<ItemMenu> itens_menu;
 };

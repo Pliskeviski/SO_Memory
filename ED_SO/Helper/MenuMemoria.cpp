@@ -23,6 +23,7 @@ MenuMemoria::MenuMemoria(std::string arquivo) {
 	this->addItem("1 - Remover Processo", BIND_FN(MenuMemoria::RemoverProcesso));
 	this->addItem("2 - Mostra Memoria", BIND_FN(MenuMemoria::MostraMemoria));
 	this->addItem("3 - Mostrar Estatistica", BIND_FN(MenuMemoria::MostrarEstatistica));
+	this->addItem("4 - Sair", BIND_FN(Menu::Sair));
 }
 void MenuMemoria::NovoProcesso() {
 	std::cin.get();
@@ -75,7 +76,7 @@ void MenuMemoria::NovoProcesso() {
 	}
 
 	if (tempo > 0)
-		std::cout << "Processo inserido em: " << tempo << " microseconds\n";
+		std::cout << "Processo inserido em: " << tempo << " microseconds\n\n";
 }
 
 void MenuMemoria::RemoverProcesso() {
@@ -117,7 +118,7 @@ void MenuMemoria::RemoverProcesso() {
 	}
 
 	if (tempo > 0)
-		std::cout << "Processo removido em: " << tempo << " microseconds\n";
+		std::cout << "Processo removido em: " << tempo << " microseconds\n\n";
 }
 
 void MenuMemoria::MostraMemoria() {

@@ -141,7 +141,7 @@ double Algoritmo::Remove(const char* nome) {
 	if(removido)
 		this->OrganizaListas();
 	else {
-		std::cout << "Não foi possivel remover o processo!\n";
+		std::cout << "Nao foi possivel remover o processo!\n";
 		return -1;
 	}
 
