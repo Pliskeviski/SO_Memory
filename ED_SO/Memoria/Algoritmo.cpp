@@ -28,10 +28,9 @@ Node* Algoritmo::InserePosicao(Processo* p, Node* node) {
 	return this->l_livres_ocupados->InserirConteudo(p, node);
 }
 
-void Algoritmo::RemoveProcesso(const char* nome) {
+bool Algoritmo::RemoveProcesso(const char* nome) {
 	Processo p(nome);
-	this->l_livres_ocupados->RemoverConteudo(p);
-	this->OrganizaListas();
+	return this->l_livres_ocupados->RemoverConteudo(p);
 }
 
 int Algoritmo::CarregaProcessosArquivo(const char* filePath) {
@@ -112,27 +111,42 @@ void Algoritmo::OrganizaOcupadasOrdem() {
 	BubbleSort::bubbleSort(this->l_ocupados_ordenado);
 }
 
-void Algoritmo::Insere(Processo p, bool dinamica) {
+double Algoritmo::Insere(Processo p, bool dinamica) {
 	Processo* processo = new Processo(p.Nome.c_str(), p.Alocacao, p.EspacoMemoria);
 
 	Meditor tempo; 
 
+	void* retorno = NULL;
+
 	if(dinamica)
-		this->l_livres_ocupados->Inserir(processo);
+		retorno = (void*)this->l_livres_ocupados->Inserir(processo);
 	else
-		this->InsereProcesso(processo);
+		retorno = this->InsereProcesso(processo);
+
+	if (retorno == NULL)
+		return -1;
 
 	this->OrganizaListas();
 
 	auto t = tempo.Fim();
-	
-	if(!dinamica)
-		std::cout << "Tempo: " << t << " Microseconds" << std::endl;
+
+	return t;
 }
 
-void Algoritmo::Remove(const char* nome) {
-	this->RemoveProcesso(nome);
-	this->OrganizaListas();
+double Algoritmo::Remove(const char* nome) {
+	Meditor tempo;
+
+	bool removido = this->RemoveProcesso(nome);
+	
+	if(removido)
+		this->OrganizaListas();
+	else {
+		std::cout << "Não foi possivel remover o processo!\n";
+		return -1;
+	}
+
+	auto t = tempo.Fim();
+	return t;
 }
 
 void Algoritmo::Print() {

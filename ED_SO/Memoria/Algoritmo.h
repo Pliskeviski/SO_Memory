@@ -17,8 +17,8 @@ public:
 		dinamica = false
 			trabalha com os nós já existentes na lista
 	*/
-	void Insere(Processo p, bool dinamica = false);
-	void Remove(const char* nome);
+	double Insere(Processo p, bool dinamica = false);
+	double Remove(const char* nome);
 
 	void Print();
 
@@ -35,7 +35,7 @@ protected:
 	/*
 		Remove um processo da "memoria"
 	*/
-	virtual void RemoveProcesso(const char* nome);
+	virtual bool RemoveProcesso(const char* nome);
 
 	Lista<Processo>* l_livres_ocupados; // Memoria principal
 
