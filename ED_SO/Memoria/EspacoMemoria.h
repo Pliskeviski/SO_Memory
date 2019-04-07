@@ -10,7 +10,7 @@ struct EspacoMemoria {
 	int sequencia;
 
 	friend std::ostream& operator << (std::ostream &out, const EspacoMemoria &e) {
-		out << e.node->index << " - " << e.sequencia;
+		out << e.sequencia;
 		return out;
 	}
 };

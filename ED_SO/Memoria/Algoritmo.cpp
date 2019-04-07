@@ -4,7 +4,7 @@
 
 #include <algorithm> 
 #include <chrono> 
-using namespace std::chrono;
+#include <iomanip>
 
 #define MAX 10
 
@@ -150,16 +150,24 @@ double Algoritmo::Remove(const char* nome) {
 }
 
 void Algoritmo::Print() {
-	std::cout << "Memoria principal\n";
+	// Principal
+	std::cout << std::setw(20) << std::right << "\nMemoria principal" << std::endl;
+	std::cout << std::setw(5) << std::right << "Index" << " - " << "Nome" << std::endl;
 	this->l_livres_ocupados->Print();
 	
-	std::cout << "\nOcupados\n";
+	// Ocupados
+	std::cout << std::setw(20) << std::right << "\nOcupados" << std::endl;
+	std::cout << std::setw(5) << std::right << "Index" << " - " << "Sequencia" << std::endl;
 	this->l_ocupados->Print();
 
-	std::cout << "\nOcupados Ordenados\n";
+	// Ocupados Ordenados
+	std::cout << std::setw(20) << std::right << "\nOcupados Ordenados" << std::endl;
+	std::cout << std::setw(5) << std::right << "Index" << " - " << "Sequencia" << std::endl;
 	this->l_ocupados_ordenado->Print();
 
-	std::cout << "\nLivres\n";
+	// Livres
+	std::cout << std::setw(20) << std::right << "\nLivres Ordenados" << std::endl;
+	std::cout << std::setw(5) << std::right << "Index" << " - " << "Sequencia" << std::endl;
 	this->l_livres->Print();
 }
 

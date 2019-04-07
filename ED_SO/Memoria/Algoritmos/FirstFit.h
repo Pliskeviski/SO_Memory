@@ -5,6 +5,7 @@
 class FirstFit : public Algoritmo {
 public:
 	FirstFit();
+	void Print() override;
 protected:
 	virtual void* InsereProcesso(Processo* p) override;
 };

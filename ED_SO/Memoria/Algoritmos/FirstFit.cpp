@@ -1,5 +1,7 @@
 #include "FirstFit.h"
 
+#include <iomanip>
+
 FirstFit::FirstFit() : Algoritmo() {
 }
 
@@ -14,4 +16,41 @@ void* FirstFit::InsereProcesso(Processo* p) {
 
 	std::cout << "Nenhuma posicao livre foi encontrada\n";
 	return NULL;
+}
+
+void FirstFit::Print() {
+	// Principal
+	std::cout << std::setw(20) << std::right << "\nMemoria principal" << std::endl;
+	std::cout << std::setw(5) << std::right << "Index" << " - " << "Nome" << std::endl;
+	this->l_livres_ocupados->Print();
+
+	// Ocupados
+	std::cout << std::setw(20) << std::right << "\nOcupados" << std::endl;
+	std::cout << std::setw(5) << std::right << "Index" << " - " << "Sequencia" << std::endl;
+	for (int i = 0; i < this->l_ocupados->GetSize(); i++) {
+		EspacoMemoria* conteudo = (EspacoMemoria*)this->l_ocupados->get(i)->conteudo;
+		auto node = conteudo->node;
+
+		std::cout << std::setw(5) << std::right << node->index << " - " << conteudo->sequencia << std::endl;
+	}
+
+	// Ocupados Ordenados
+	std::cout << std::setw(20) << std::right << "\nOcupados Ordenados" << std::endl;
+	std::cout << std::setw(5) << std::right << "Index" << " - " << "Sequencia" << std::endl;
+	for (int i = 0; i < this->l_ocupados_ordenado->GetSize(); i++) {
+		EspacoMemoria* conteudo = (EspacoMemoria*)this->l_ocupados_ordenado->get(i)->conteudo;
+		auto node = conteudo->node;
+
+		std::cout << std::setw(5) << std::right << node->index << " - " << conteudo->sequencia << std::endl;
+	}
+
+	// Livres
+	std::cout << std::setw(20) << std::right << "\nLivres Ordenados" << std::endl;
+	std::cout << std::setw(5) << std::right << "Index" << " - " << "Sequencia" << std::endl;
+	for (int i = 0; i < this->l_livres->GetSize(); i++) {
+		EspacoMemoria* conteudo = (EspacoMemoria*)this->l_livres->get(i)->conteudo;
+		auto node = conteudo->node;
+
+		std::cout << std::setw(5) << std::right << node->index << " - " << conteudo->sequencia << std::endl;
+	}
 }

@@ -19,7 +19,7 @@ struct Operacao {
 	long tempo;
 };
 
-#define BIND_EVENT_FN(x) std::bind(&x, this)
+#define BIND_FN(x) std::bind(&x, this)
 
 class MenuMemoria : public Menu {
 public:
@@ -28,6 +28,9 @@ private:
 	void NovoProcesso();
 	void RemoverProcesso();
 	void MostraMemoria();
+	void MostrarEstatistica();
+
+	void ImprimeVetorEstatistica(std::vector<Operacao>& vetor);
 
 	FirstFit* firstFit;
 	BestFit* bestFit;

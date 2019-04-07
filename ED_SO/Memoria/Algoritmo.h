@@ -20,7 +20,7 @@ public:
 	double Insere(Processo p, bool dinamica = false);
 	double Remove(const char* nome);
 
-	void Print();
+	virtual void Print();
 
 protected:
 	virtual ~Algoritmo();

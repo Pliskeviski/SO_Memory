@@ -132,11 +132,18 @@ inline void Lista<T>::Reset() {
 template<typename T>
 inline void Lista<T>::Print() {
 	auto node = this->cabeca;
+	int index = 0;
+
+	if (node == NULL) {
+		std::cout << std::setw(5) << std::right << "Vazio" << std::endl;
+		return;
+	}
+
 	for (; node != NULL; node = node->proximo) {
 		if (node->conteudo != NULL)
-			std::cout << *(T*)node->conteudo << std::endl;
+			std::cout << std::setw(5) << std::right << index++ << " - " << *(T*)node->conteudo << std::endl;
 		else
-			std::cout << "NULL" << std::endl;
+			std::cout << std::setw(5) << std::right << index++ << " - " << "NULL" << std::endl;
 	}
 }
 
