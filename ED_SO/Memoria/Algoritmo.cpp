@@ -169,7 +169,7 @@ void Algoritmo::Remove() {
 	else {
 		EspacoMemoria* espaco = (EspacoMemoria*)node->conteudo;
 		if (this->l_livres_ocupados->RemoveNode((Node*)espaco->node)) {
-			//node->conteudo = NULL;
+			std::cout << "Memora reduzida\n";
 		}
 		this->OrganizaListas();
 	}

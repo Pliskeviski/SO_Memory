@@ -124,14 +124,14 @@ inline bool Lista<T>::RemoveNode(Node* node) {
 	anterior = this->cabeca;
 	for (Node* nodeI = this->cabeca->proximo; nodeI != NULL; nodeI = nodeI->proximo) {
 		if (nodeI == node) {
-			anterior->proximo = node->proximo;
+			anterior->proximo = nodeI->proximo;
 			delete node->conteudo;
 			delete node;
 			this->size--;
 			return true;
 		}
 
-		anterior = node;
+		anterior = nodeI;
 	}
 
 	return false;
