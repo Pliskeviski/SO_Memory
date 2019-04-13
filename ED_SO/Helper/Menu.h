@@ -4,7 +4,7 @@
 #include <vector>
 #include <functional>
 
-using EventoFuncao = std::function<void()>;
+using EventoFuncao = std::function<void(void*)>;
 
 class ItemMenu {
 public:
@@ -44,10 +44,10 @@ public:
 		#endif
 
 
-		this->itens_menu[entrada].funcao();
+		this->itens_menu[entrada].funcao(NULL);
 	}
 
-	void Sair() {
+	void Sair(void* p = NULL) {
 		exit(0);
 	}
 
