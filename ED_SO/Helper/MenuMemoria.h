@@ -29,6 +29,8 @@ private:
 	void RemoverProcesso();
 	void MostraMemoria();
 	void MostrarEstatistica();
+	void ExpandirMemoria();
+	void ReduzirMemoria();
 
 	void ImprimeVetorEstatistica(std::vector<Operacao>& vetor);
 

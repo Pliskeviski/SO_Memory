@@ -19,7 +19,7 @@ int Algoritmo::Init(const char* filePath) {
 	if (this->CarregaProcessosArquivo(filePath) == -1) return -1;
 
 	for (Processo p : this->processos_arquivo)
-		this->Insere(p, true);
+		this->Insere(&p, true);
 	
 	return 0;
 }
@@ -64,11 +64,16 @@ void Algoritmo::OrganizaOcupados() {
 	int sequencia = 0;
 
 	for (int i = 0; i < this->l_livres_ocupados->GetSize(); i++) {
-		if (inicio == NULL && this->l_livres_ocupados->get(i)->conteudo != NULL) {
-			EspacoMemoria* espacoMemoria = new EspacoMemoria(this->l_livres_ocupados->get(i), sequencia++);
+		auto node = this->l_livres_ocupados->get(i);
+		
+		
+
+		if (inicio == NULL && node->conteudo != NULL) {
+			EspacoMemoria* espacoMemoria = new EspacoMemoria(node, sequencia++);
 			inicio = this->l_ocupados->Inserir(espacoMemoria);
 		}
-		else if (this->l_livres_ocupados->get(i)->conteudo != NULL) {
+		
+		else if (node->conteudo != NULL) {
 			((EspacoMemoria*)inicio->conteudo)->sequencia = sequencia++;
 		}
 		else {
@@ -84,11 +89,13 @@ void Algoritmo::OrganizaLivres() {
 	int sequencia = 0;
 
 	for (int i = 0; i < this->l_livres_ocupados->GetSize(); i++) {
-		if (inicio == NULL && this->l_livres_ocupados->get(i)->conteudo == NULL) {
-			EspacoMemoria* espacoMemoria = new EspacoMemoria(this->l_livres_ocupados->get(i), sequencia++);
+		auto node = this->l_livres_ocupados->get(i);
+
+		if (inicio == NULL && node->conteudo == NULL) {
+			EspacoMemoria* espacoMemoria = new EspacoMemoria(node, sequencia++);
 			inicio = this->l_livres->Inserir(espacoMemoria);
 		}
-		else if (this->l_livres_ocupados->get(i)->conteudo == NULL) {
+		else if (node == NULL) {
 			((EspacoMemoria*)inicio->conteudo)->sequencia = sequencia++;
 		}
 		else {
@@ -104,15 +111,20 @@ void Algoritmo::OrganizaOcupadasOrdem() {
 	this->l_ocupados_ordenado->Reset();
 
 	for (int i = 0; i < this->l_ocupados->GetSize(); i++) {
-		EspacoMemoria* espacoMemoria = new EspacoMemoria(((EspacoMemoria*)this->l_ocupados->get(i)->conteudo)->node, ((EspacoMemoria*)this->l_ocupados->get(i)->conteudo)->sequencia);
+		auto node = this->l_ocupados->get(i);
+
+		EspacoMemoria* espacoMemoria = new EspacoMemoria(((EspacoMemoria*)node->conteudo)->node, ((EspacoMemoria*)node->conteudo)->sequencia);
 		this->l_ocupados_ordenado->Inserir(espacoMemoria);
 	}
 
 	BubbleSort::bubbleSort(this->l_ocupados_ordenado);
 }
 
-double Algoritmo::Insere(Processo p, bool dinamica) {
-	Processo* processo = new Processo(p.Nome.c_str(), p.Alocacao, p.EspacoMemoria);
+double Algoritmo::Insere(Processo* p, bool dinamica) {
+	Processo* processo = NULL;
+	
+	if(p != NULL)
+		processo = new Processo(p->Nome.c_str(), p->Alocacao, p->EspacoMemoria);
 
 	Meditor tempo; 
 
@@ -133,7 +145,7 @@ double Algoritmo::Insere(Processo p, bool dinamica) {
 	return t;
 }
 
-double Algoritmo::Remove(const char* nome) {
+double Algoritmo::RemoveNome(const char* nome) {
 	Meditor tempo;
 
 	bool removido = this->RemoveProcesso(nome);
@@ -147,6 +159,20 @@ double Algoritmo::Remove(const char* nome) {
 
 	auto t = tempo.Fim();
 	return t;
+}
+
+void Algoritmo::Remove() {
+	auto node = this->l_livres->get(0);
+	if (node == NULL) {
+		std::cout << "Nenhuma posicao livre para exclusao\n";
+	}
+	else {
+		EspacoMemoria* espaco = (EspacoMemoria*)node->conteudo;
+		if (this->l_livres_ocupados->RemoveNode((Node*)espaco->node)) {
+			//node->conteudo = NULL;
+		}
+		this->OrganizaListas();
+	}
 }
 
 void Algoritmo::Print() {

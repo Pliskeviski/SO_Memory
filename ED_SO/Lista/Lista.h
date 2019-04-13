@@ -11,6 +11,7 @@ public:
 	Node* InserirConteudo(T* conteudo, Node* node);
 	void Remover(T item);
 	bool RemoverConteudo(T node);
+	bool RemoveNode(Node* node);
 	
 	void Reset();
 
@@ -24,6 +25,7 @@ private:
 	unsigned int size;
 	Node* cabeca;
 	Node* ultimo;
+	unsigned int index;
 };
 
 template<typename T>
@@ -31,28 +33,23 @@ inline Lista<T>::Lista() {
 	this->cabeca = NULL;
 	this->ultimo = NULL;
 	this->size = 0;
+	this->index = 0;
 }
 
 template<typename T>
 inline Node* Lista<T>::Inserir(T* item) {
 	if (this->cabeca == NULL) {
-		this->cabeca = new Node(item, this->size);
+		this->cabeca = new Node(item, this->index++);
 		this->ultimo = cabeca;
 		this->size++;
 		return this->cabeca;
 	}
 
-	try {
-		auto novo = new Node(item, this->size);
-		ultimo->proximo = novo;
-		ultimo = novo;
-		this->size++;
-		return novo;
-	}
-	catch (int e) {
-		std::cout << "Erro ao inserir na Lista. " << e << std::endl;
-		return NULL;
-	}
+	auto novo = new Node(item, this->index++);
+	ultimo->proximo = novo;
+	ultimo = novo;
+	this->size++;
+	return novo;
 }
 
 template<typename T>
@@ -113,6 +110,34 @@ inline bool Lista<T>::RemoverConteudo(T conteudo) {
 }
 
 template<typename T>
+inline bool Lista<T>::RemoveNode(Node* node) {
+	Node* anterior = NULL;
+
+	if (node == this->cabeca) {
+		this->cabeca = node->proximo;
+		delete node->conteudo;
+		delete node;
+		this->size--;
+		return true;
+	}
+
+	anterior = this->cabeca;
+	for (Node* nodeI = this->cabeca->proximo; nodeI != NULL; nodeI = nodeI->proximo) {
+		if (nodeI == node) {
+			anterior->proximo = node->proximo;
+			delete node->conteudo;
+			delete node;
+			this->size--;
+			return true;
+		}
+
+		anterior = node;
+	}
+
+	return false;
+}
+
+template<typename T>
 inline void Lista<T>::Reset() {
 	while (this->cabeca != NULL) {
 
@@ -132,7 +157,6 @@ inline void Lista<T>::Reset() {
 template<typename T>
 inline void Lista<T>::Print() {
 	auto node = this->cabeca;
-	int index = 0;
 
 	if (node == NULL) {
 		std::cout << std::setw(5) << std::right << "Vazio" << std::endl;
@@ -141,9 +165,9 @@ inline void Lista<T>::Print() {
 
 	for (; node != NULL; node = node->proximo) {
 		if (node->conteudo != NULL)
-			std::cout << std::setw(5) << std::right << index++ << " - " << *(T*)node->conteudo << std::endl;
+			std::cout << std::setw(5) << std::right << node->index << " - " << *(T*)node->conteudo << std::endl;
 		else
-			std::cout << std::setw(5) << std::right << index++ << " - " << "NULL" << std::endl;
+			std::cout << std::setw(5) << std::right << node->index << " - " << "NULL" << std::endl;
 	}
 }
 

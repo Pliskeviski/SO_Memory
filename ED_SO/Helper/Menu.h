@@ -43,6 +43,7 @@ public:
 			system("cls");
 		#endif
 
+
 		this->itens_menu[entrada].funcao();
 	}
 

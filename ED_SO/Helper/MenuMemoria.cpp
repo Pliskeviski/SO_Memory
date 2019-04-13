@@ -23,7 +23,9 @@ MenuMemoria::MenuMemoria(std::string arquivo) {
 	this->addItem("1 - Remover Processo", BIND_FN(MenuMemoria::RemoverProcesso));
 	this->addItem("2 - Mostra Memoria", BIND_FN(MenuMemoria::MostraMemoria));
 	this->addItem("3 - Mostrar Estatistica", BIND_FN(MenuMemoria::MostrarEstatistica));
-	this->addItem("4 - Sair", BIND_FN(Menu::Sair));
+	this->addItem("4 - Expandir Memoria", BIND_FN(MenuMemoria::ExpandirMemoria));
+	this->addItem("5 - Reduzir Memoria", BIND_FN(MenuMemoria::ReduzirMemoria));
+	this->addItem("6 - Sair", BIND_FN(Menu::Sair));
 }
 void MenuMemoria::NovoProcesso() {
 	std::cin.get();
@@ -57,17 +59,17 @@ void MenuMemoria::NovoProcesso() {
 
 	switch (alg) {
 	case 1:
-		tempo = this->firstFit->Insere(processo);
+		tempo = this->firstFit->Insere(&processo);
 		if (tempo > 0)
 			this->operacoesFirstFit.push_back(Operacao(1, tempo));
 		break;
 	case 2:
-		tempo = this->bestFit->Insere(processo);
+		tempo = this->bestFit->Insere(&processo);
 		if (tempo > 0)
 			this->operacoesBestFit.push_back(Operacao(1, tempo));
 		break;
 	case 3:
-		tempo = this->worstFit->Insere(processo);
+		tempo = this->worstFit->Insere(&processo);
 		if (tempo > 0)
 			this->operacoesWorstFit.push_back(Operacao(1, tempo));
 		break;
@@ -99,17 +101,17 @@ void MenuMemoria::RemoverProcesso() {
 
 	switch (alg) {
 	case 1:
-		tempo = this->firstFit->Remove(nome.c_str());
+		tempo = this->firstFit->RemoveNome(nome.c_str());
 		if (tempo > 0)
 			this->operacoesFirstFit.push_back(Operacao(2, tempo));
 		break;
 	case 2:
-		tempo = this->bestFit->Remove(nome.c_str());
+		tempo = this->bestFit->RemoveNome(nome.c_str());
 		if (tempo > 0)
 			this->operacoesBestFit.push_back(Operacao(2, tempo));
 		break;
 	case 3:
-		tempo = this->worstFit->Remove(nome.c_str());
+		tempo = this->worstFit->RemoveNome(nome.c_str());
 		if (tempo > 0)
 			this->operacoesWorstFit.push_back(Operacao(2, tempo));
 		break;
@@ -185,6 +187,76 @@ void MenuMemoria::MostrarEstatistica() {
 	case 3:
 		std::cout << std::setw(5) << std::right << "Estatisticas WorstFit" << std::endl;
 		this->ImprimeVetorEstatistica(this->operacoesWorstFit);
+		break;
+	default:
+		break;
+	}
+
+	std::cout << "\nPressione enter para continuar...\n";
+	std::cin.get();
+	std::cin.get();
+
+	limpar();
+}
+
+void MenuMemoria::ExpandirMemoria() {
+	limpar();
+
+	unsigned int alg;
+	std::cout << "Digite o algoritmo a ser utilizado: \n1-First Fit\n2-BestFit\n3-WorstFit \n";
+	std::cin >> alg;
+
+	if (alg < 1 || alg > 4) {
+		std::cout << "Algoritmo invalido.\n";
+		return;
+	}
+
+	limpar();
+
+	switch (alg) {
+	case 1:
+		this->firstFit->Insere(NULL, true);
+		break;
+	case 2:
+		this->bestFit->Insere(NULL, true);
+		break;
+	case 3:
+		this->worstFit->Insere(NULL, true);
+		break;
+	default:
+		break;
+	}
+
+	std::cout << "\nPressione enter para continuar...\n";
+	std::cin.get();
+	std::cin.get();
+
+	limpar();
+}
+
+void MenuMemoria::ReduzirMemoria() {
+	limpar();
+
+	unsigned int alg;
+	std::cout << "Digite o algoritmo a ser utilizado: \n1-First Fit\n2-BestFit\n3-WorstFit \n";
+	std::cin >> alg;
+
+	if (alg < 1 || alg > 4) {
+		std::cout << "Algoritmo invalido.\n";
+		return;
+	}
+
+	limpar();
+
+	switch (alg) {
+	case 1:
+		this->firstFit->Remove();
+		break;
+	case 2:
+		this->bestFit->Remove();
+		break;
+	case 3:
+		this->worstFit->Remove();
 		break;
 	default:
 		break;
