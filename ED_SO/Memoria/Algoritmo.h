@@ -63,9 +63,8 @@ public:
 	static void bubbleSort(Lista<EspacoMemoria>* lista) {
 		int n = lista->GetSize();
 
-		int i, j;
-		for (i = 0; i < n - 1; i++)
-			for (j = 0; j < n - i - 1; j++) {
+		for (int i = 0; i < n - 1; i++)
+			for (int j = 0; j < n - i - 1; j++) {
 				if (((EspacoMemoria*)lista->get(j)->conteudo)->sequencia > ((EspacoMemoria*)lista->get(j + 1)->conteudo)->sequencia)
 					swap(lista, j, j + 1);
 			}
