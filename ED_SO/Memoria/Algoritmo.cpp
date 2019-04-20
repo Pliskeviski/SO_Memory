@@ -6,11 +6,10 @@
 #include <chrono> 
 #include <iomanip>
 
-#define MAX 10
-
 Algoritmo::Algoritmo() {
 	this->l_livres_ocupados = new Lista<Processo>();
 	this->l_livres = new Lista<EspacoMemoria>();
+	this->l_livres_ordenada = new Lista<EspacoMemoria>();
 	this->l_ocupados = new Lista<EspacoMemoria>();
 	this->l_ocupados_ordenado = new Lista<EspacoMemoria>();
 }
@@ -19,7 +18,7 @@ int Algoritmo::Init(const char* filePath) {
 	if (this->CarregaProcessosArquivo(filePath) == -1) return -1;
 
 	for (Processo p : this->processos_arquivo)
-		this->Insere(&p, true);
+		this->Insere(&p, LISTA::PRINCIPAL, true);
 	
 	return 0;
 }
@@ -33,7 +32,7 @@ bool Algoritmo::RemoveProcesso(const char* nome) {
 	return this->l_livres_ocupados->RemoverConteudo(p);
 }
 
-int Algoritmo::CarregaProcessosArquivo(const char* filePath) {
+int Algoritmo::CarregaProcessosArquivo(const char* filePath, int max_itens) {
 	FILE* file = std::fopen(filePath, "r+");
 	if (!file) {
 		std::cout << "Erro ao abrir o arquivo\n";
@@ -43,9 +42,9 @@ int Algoritmo::CarregaProcessosArquivo(const char* filePath) {
 	char nome[12];
 	int  espac;
 	int  alloc;
-	
+
 	for (; std::fscanf(file, "%s %d %d", nome, &espac, &alloc) != -1; this->processos_arquivo.insert(this->processos_arquivo.begin(), Processo(nome, alloc, espac)))
-		if (this->processos_arquivo.size() >= MAX) break;
+		if (max_itens > 0 && this->processos_arquivo.size() >= max_itens) break;
 
 	fclose(file);
 
@@ -65,14 +64,12 @@ void Algoritmo::OrganizaOcupados() {
 
 	for (int i = 0; i < this->l_livres_ocupados->GetSize(); i++) {
 		auto node = this->l_livres_ocupados->get(i);
-		
-		
+		if (node == NULL) continue;
 
 		if (inicio == NULL && node->conteudo != NULL) {
 			EspacoMemoria* espacoMemoria = new EspacoMemoria(node, sequencia++);
 			inicio = this->l_ocupados->Inserir(espacoMemoria);
 		}
-		
 		else if (node->conteudo != NULL) {
 			((EspacoMemoria*)inicio->conteudo)->sequencia = sequencia++;
 		}
@@ -80,31 +77,40 @@ void Algoritmo::OrganizaOcupados() {
 			inicio = NULL;
 			sequencia = 0;
 		}
+
 	}
 }
 
 void Algoritmo::OrganizaLivres() {
 	this->l_livres->Reset();
+	this->l_livres_ordenada->Reset();
+
 	Node* inicio = NULL;
+	Node* inicioOrd = NULL;
 	int sequencia = 0;
 
 	for (int i = 0; i < this->l_livres_ocupados->GetSize(); i++) {
 		auto node = this->l_livres_ocupados->get(i);
+		if (node == NULL) continue;
 
 		if (inicio == NULL && node->conteudo == NULL) {
-			EspacoMemoria* espacoMemoria = new EspacoMemoria(node, sequencia++);
-			inicio = this->l_livres->Inserir(espacoMemoria);
+			inicio = this->l_livres->Inserir(new EspacoMemoria(node, sequencia));
+			inicioOrd = this->l_livres_ordenada->Inserir(new EspacoMemoria(node, sequencia));
+			sequencia++;
 		}
-		else if (node == NULL) {
-			((EspacoMemoria*)inicio->conteudo)->sequencia = sequencia++;
+		else if (node->conteudo == NULL) {
+			((EspacoMemoria*)inicio->conteudo)->sequencia = sequencia;
+			((EspacoMemoria*)inicioOrd->conteudo)->sequencia = sequencia;
+			sequencia++;
 		}
 		else {
 			inicio = NULL;
+			inicioOrd = NULL;
 			sequencia = 0;
 		}
 	}
 
-	BubbleSort::bubbleSort(this->l_livres);
+	BubbleSort::bubbleSort(this->l_livres_ordenada);
 }
 
 void Algoritmo::OrganizaOcupadasOrdem() {
@@ -112,6 +118,7 @@ void Algoritmo::OrganizaOcupadasOrdem() {
 
 	for (int i = 0; i < this->l_ocupados->GetSize(); i++) {
 		auto node = this->l_ocupados->get(i);
+		if (node == NULL) continue;
 
 		EspacoMemoria* espacoMemoria = new EspacoMemoria(((EspacoMemoria*)node->conteudo)->node, ((EspacoMemoria*)node->conteudo)->sequencia);
 		this->l_ocupados_ordenado->Inserir(espacoMemoria);
@@ -120,7 +127,7 @@ void Algoritmo::OrganizaOcupadasOrdem() {
 	BubbleSort::bubbleSort(this->l_ocupados_ordenado);
 }
 
-double Algoritmo::Insere(Processo* p, bool dinamica) {
+double Algoritmo::Insere(Processo* p, LISTA lista, bool dinamica) {
 	Processo* processo = NULL;
 	
 	if(p != NULL)
@@ -133,7 +140,7 @@ double Algoritmo::Insere(Processo* p, bool dinamica) {
 	if(dinamica)
 		retorno = (void*)this->l_livres_ocupados->Inserir(processo);
 	else
-		retorno = this->InsereProcesso(processo);
+		retorno = this->InsereProcesso(processo, lista);
 
 	if (retorno == NULL)
 		return -1;
@@ -162,7 +169,7 @@ double Algoritmo::RemoveNome(const char* nome) {
 }
 
 void Algoritmo::Remove() {
-	auto node = this->l_livres->get(0);
+	auto node = this->l_livres_ordenada->get(0);
 	if (node == NULL) {
 		std::cout << "Nenhuma posicao livre para exclusao\n";
 	}
@@ -192,14 +199,19 @@ void Algoritmo::Print() {
 	this->l_ocupados_ordenado->Print();
 
 	// Livres
-	std::cout << std::setw(20) << std::right << "\nLivres Ordenados" << std::endl;
+	std::cout << std::setw(20) << std::right << "\nLivres" << std::endl;
 	std::cout << std::setw(5) << std::right << "Index" << " - " << "Sequencia" << std::endl;
 	this->l_livres->Print();
+
+	// Livres Ordenadas
+	std::cout << std::setw(20) << std::right << "\nLivres Ordenadas" << std::endl;
+	std::cout << std::setw(5) << std::right << "Index" << " - " << "Sequencia" << std::endl;
+	this->l_livres_ordenada->Print();
 }
 
 Algoritmo::~Algoritmo() {
 	delete this->l_livres_ocupados;
-	delete this->l_livres_ocupados;
+	delete this->l_livres_ordenada;
 	delete this->l_livres;
 	delete this->l_ocupados;
 	delete this->l_ocupados_ordenado;

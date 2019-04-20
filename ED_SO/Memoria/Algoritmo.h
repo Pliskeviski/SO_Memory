@@ -5,6 +5,13 @@
 #include "../Lista/Lista.h"
 #include "EspacoMemoria.h"
 
+enum LISTA {
+	NOLISTA = -1,
+	PRINCIPAL = 0,
+	LIVRE = 1,
+	LIVREORDENADA = 2
+};
+
 // Classe base para a implementacao dos algoritmos
 class Algoritmo {
 public:
@@ -17,7 +24,7 @@ public:
 		dinamica = false
 			trabalha com os nós já existentes na lista
 	*/
-	double Insere(Processo* p, bool dinamica = false);
+	double Insere(Processo* p, LISTA lista, bool dinamica = false);
 	double RemoveNome(const char* nome);
 	void Remove();
 
@@ -31,7 +38,7 @@ protected:
 	/*
 		Insere um novo processo na "memoria"
 	*/
-	virtual void* InsereProcesso(Processo* p) = 0;
+	virtual void* InsereProcesso(Processo* p, LISTA lista) = 0;
 
 	/*
 		Remove um processo da "memoria"
@@ -41,6 +48,7 @@ protected:
 	Lista<Processo>* l_livres_ocupados; // Memoria principal
 
 	Lista<EspacoMemoria>* l_livres;
+	Lista<EspacoMemoria>* l_livres_ordenada;
 	Lista<EspacoMemoria>* l_ocupados;
 	Lista<EspacoMemoria>* l_ocupados_ordenado;
 
@@ -48,7 +56,7 @@ private:
 	/*
 		Carrega os Processos do arquivo para um vetor
 	*/
-	int CarregaProcessosArquivo(const char* filePath);
+	int CarregaProcessosArquivo(const char* filePath, int max_itens = 0);
 	std::vector<Processo> processos_arquivo;
 
 	void OrganizaListas();

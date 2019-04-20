@@ -85,6 +85,8 @@ inline void Lista<T>::Remover(T item) {
 
 		prev = node;
 	}
+
+	this->ultimo = this->get(this->GetSize() - 1);
 }
 
 template<typename T>

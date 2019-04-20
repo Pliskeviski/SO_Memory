@@ -7,5 +7,5 @@ public:
 	FirstFit();
 	void Print() override;
 protected:
-	virtual void* InsereProcesso(Processo* p) override;
+	virtual void* InsereProcesso(Processo* p, LISTA lista) override;
 };

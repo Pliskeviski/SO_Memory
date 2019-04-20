@@ -5,12 +5,33 @@
 FirstFit::FirstFit() : Algoritmo() {
 }
 
-void* FirstFit::InsereProcesso(Processo* p) {
-	for (int i = 0; i < this->l_livres_ocupados->GetSize(); i++) {
-		auto node = this->l_livres_ocupados->get(i);
-		if (node->conteudo == NULL) {
-			std::cout << "Inserindo processo " << p->Nome << std::endl;
-			return this->InserePosicao(p, node);
+void* FirstFit::InsereProcesso(Processo* p, LISTA lista) {
+
+	if (lista == LISTA::PRINCIPAL) {
+		for (int i = 0; i < this->l_livres_ocupados->GetSize(); i++) {
+			auto node = this->l_livres_ocupados->get(i);
+			if (node->conteudo == NULL) {
+				std::cout << "Inserindo processo " << p->Nome << std::endl;
+				return this->InserePosicao(p, node);
+			}
+		}
+	}
+	else if (lista == LISTA::LIVRE) {
+		for (int i = 0; i < this->l_livres->GetSize(); i++) {
+			auto node = ((EspacoMemoria*)this->l_livres->get(i)->conteudo)->node;
+			if (node->conteudo == NULL) {
+				std::cout << "Inserindo processo " << p->Nome << std::endl;
+				return this->InserePosicao(p, node);
+			}
+		}
+	}
+	else if (lista == LISTA::LIVREORDENADA) {
+		for (int i = 0; i < this->l_livres_ordenada->GetSize(); i++) {
+			auto node = ((EspacoMemoria*)this->l_livres_ordenada->get(i)->conteudo)->node;
+			if (node->conteudo == NULL) {
+				std::cout << "Inserindo processo " << p->Nome << std::endl;
+				return this->InserePosicao(p, node);
+			}
 		}
 	}
 
@@ -45,10 +66,20 @@ void FirstFit::Print() {
 	}
 
 	// Livres
-	std::cout << std::setw(20) << std::right << "\nLivres Ordenados" << std::endl;
+	std::cout << std::setw(20) << std::right << "\nLivres" << std::endl;
 	std::cout << std::setw(5) << std::right << "Index" << " - " << "Sequencia" << std::endl;
 	for (int i = 0; i < this->l_livres->GetSize(); i++) {
 		EspacoMemoria* conteudo = (EspacoMemoria*)this->l_livres->get(i)->conteudo;
+		auto node = conteudo->node;
+
+		std::cout << std::setw(5) << std::right << node->index << " - " << conteudo->sequencia << std::endl;
+	}
+
+	// Livres
+	std::cout << std::setw(20) << std::right << "\nLivres Ordenadas" << std::endl;
+	std::cout << std::setw(5) << std::right << "Index" << " - " << "Sequencia" << std::endl;
+	for (int i = 0; i < this->l_livres_ordenada->GetSize(); i++) {
+		EspacoMemoria* conteudo = (EspacoMemoria*)this->l_livres_ordenada->get(i)->conteudo;
 		auto node = conteudo->node;
 
 		std::cout << std::setw(5) << std::right << node->index << " - " << conteudo->sequencia << std::endl;

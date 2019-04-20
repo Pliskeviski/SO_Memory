@@ -5,5 +5,6 @@
 class WorstFit : public Algoritmo {
 public:
 	WorstFit();
-	void* InsereProcesso(Processo* p) override;
+	void* InsereProcesso(Processo* p, LISTA lista) override;
+	void Print() override;
 };

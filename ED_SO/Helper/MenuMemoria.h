@@ -14,15 +14,17 @@ struct Operacao {
 		Operacao 1 = Insercao
 		Operacao 2 = Remocao
 	*/
-	Operacao(int operacao, long tempo) : operacao(operacao), tempo(tempo) { }
+	Operacao(int operacao, long tempo, LISTA lista = LISTA::NOLISTA) : operacao(operacao), tempo(tempo), lista(lista){ }
 	int operacao;
 	long tempo;
+	LISTA lista;
 };
 
 struct AdicionaProcesso {
-	AdicionaProcesso(Processo& processo, int algoritmo) : processo(processo), algoritmo(algoritmo) {}
+	AdicionaProcesso(Processo& processo, int algoritmo, LISTA lista) : processo(processo), algoritmo(algoritmo), lista(lista) {}
 	Processo& processo;
 	int algoritmo;
+	LISTA lista;
 };
 
 struct RemoveProcesso {

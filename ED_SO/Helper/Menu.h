@@ -34,7 +34,7 @@ public:
 		int entrada;
 		std::cin >> entrada;
 
-		if (entrada < 0 || entrada > this->itens_menu.size())
+		if (entrada < 0 || entrada >= this->itens_menu.size())
 			return;
 
 		#ifdef __linux__ 

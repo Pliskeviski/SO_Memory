@@ -35,6 +35,7 @@ void MenuMemoria::NovoProcesso(void* p) {
 	unsigned int tamanho;
 	std::string dinamica;
 	unsigned int alg;
+	unsigned int lista;
 
 	if (p == NULL) {
 		std::cin.get();
@@ -52,6 +53,9 @@ void MenuMemoria::NovoProcesso(void* p) {
 
 		std::cout << "Digite o algoritmo a ser utilizado: \n1-First Fit\n2-BestFit\n3-WorstFit \n";
 		std::cin >> alg;
+
+		std::cout << "Digite a lista a ser utilizada: \n1-Lista simples\n2-Lista livre\n3-Lista livre ordenada\n";
+		std::cin >> lista;
 	}
 	else {
 		AdicionaProcesso* ap = (AdicionaProcesso*)p;
@@ -59,6 +63,9 @@ void MenuMemoria::NovoProcesso(void* p) {
 		tamanho = ap->processo.EspacoMemoria;
 		dinamica = ap->processo.Alocacao == true ? "S" : "N";
 		alg = ap->algoritmo;
+		lista = ap->lista;
+
+		//delete ap;
 	}
 
 	if (alg < 1 || alg > 4) {
@@ -72,19 +79,19 @@ void MenuMemoria::NovoProcesso(void* p) {
 
 	switch (alg) {
 	case 1:
-		tempo = this->firstFit->Insere(&processo);
+		tempo = this->firstFit->Insere(&processo, (LISTA)lista);
 		if (tempo > 0)
-			this->operacoesFirstFit.push_back(Operacao(1, tempo));
+			this->operacoesFirstFit.push_back(Operacao(1, tempo, (LISTA)lista));
 		break;
 	case 2:
-		tempo = this->bestFit->Insere(&processo);
+		tempo = this->bestFit->Insere(&processo, (LISTA)lista);
 		if (tempo > 0)
-			this->operacoesBestFit.push_back(Operacao(1, tempo));
+			this->operacoesBestFit.push_back(Operacao(1, tempo, (LISTA)lista));
 		break;
 	case 3:
-		tempo = this->worstFit->Insere(&processo);
+		tempo = this->worstFit->Insere(&processo, (LISTA)lista);
 		if (tempo > 0)
-			this->operacoesWorstFit.push_back(Operacao(1, tempo));
+			this->operacoesWorstFit.push_back(Operacao(1, tempo, (LISTA)lista));
 		break;
 	default:
 		break;
@@ -111,6 +118,8 @@ void MenuMemoria::RemoverProcesso(void* p) {
 		RemoveProcesso* rp = (RemoveProcesso*)p;
 		nome = rp->nome_processo;
 		alg = rp->algoritmo;
+
+		//delete rp;
 	}
 
 	if (alg < 1 || alg > 4) {
@@ -258,13 +267,13 @@ void MenuMemoria::ExpandirMemoria(void* p) {
 
 	switch (alg) {
 	case 1:
-		this->firstFit->Insere(NULL, true);
+		this->firstFit->Insere(NULL, LISTA::PRINCIPAL, true);
 		break;
 	case 2:
-		this->bestFit->Insere(NULL, true);
+		this->bestFit->Insere(NULL, LISTA::PRINCIPAL, true);
 		break;
 	case 3:
-		this->worstFit->Insere(NULL, true);
+		this->worstFit->Insere(NULL, LISTA::PRINCIPAL, true);
 		break;
 	default:
 		break;
@@ -328,8 +337,8 @@ void MenuMemoria::ExecutaArquivo(void* p) {
 
 	/*
 		Insercao:
-		0 Nome Tamanho Alocacao Algoritmo
-		Ex.: 0 P10 340 1 1
+		0 Nome Tamanho Alocacao Algoritmo Lista
+		Ex.: 0 P10 340 1 1 1
 
 		Remocao:
 		1 Nome Algoritmo
@@ -348,7 +357,7 @@ void MenuMemoria::ExecutaArquivo(void* p) {
 		std::cout << "\n";
 		std::ifstream arquivo(script);
 
-		int x, tamanho, alocacao, algoritmo;
+		int x, tamanho, alocacao, algoritmo, lista;
 		char nome[12];
 
 		Processo* p = NULL;
@@ -358,9 +367,9 @@ void MenuMemoria::ExecutaArquivo(void* p) {
 		for (std::string line; std::getline(arquivo, line); ) {
 			switch (line[0]) {
 			case '0':
-				sscanf(line.c_str(), "%d %s %d %d %d", &x, nome, &tamanho, &alocacao, &algoritmo);
+				sscanf(line.c_str(), "%d %s %d %d %d %d", &x, nome, &tamanho, &alocacao, &algoritmo, &lista);
 				p = new Processo(nome, alocacao, tamanho);
-				ap = new AdicionaProcesso(*p, algoritmo);
+				ap = new AdicionaProcesso(*p, algoritmo, (LISTA)lista);
 				this->NovoProcesso((void*)ap);
 				delete p;
 				delete ap;
@@ -392,14 +401,30 @@ void MenuMemoria::ImprimeVetorEstatistica(std::vector<Operacao>& vetor) {
 		return;
 	}
 
-	std::cout << std::setw(5) << std::right << "Operacao" << " - " << "Tempo" << std::endl;
+	std::cout << std::setw(5) << std::right << "Operacao"  << " - " << "Tempo" << " - " << "Lista" << std::endl;
 	for (Operacao o : vetor) {
-		std::string operacao;
-		if (o.operacao == 1)
+		std::string operacao, lista;
+		if (o.operacao == 1) 
 			operacao = "Insercao";
 		else
-			operacao = "Remocao";
+			operacao = "Remocao ";
+		
+		switch (o.lista) {
+		case LISTA::NOLISTA:
+			lista = "";
+			break;
+		case LISTA::PRINCIPAL:
+			lista = "Principal";
+			break;
+		case LISTA::LIVRE:
+			lista = "Livre";
+			break;
+		case LISTA::LIVREORDENADA:
+			lista = "Livre ordenada";
+			break;
+		}
 
-		std::cout << std::setw(5) << std::right << operacao << " - " << o.tempo << std::endl;
+		std::cout << std::setw(5) << std::right << operacao << " - " << std::setw(5) << o.tempo << " - " << std::setw(5) << lista << std::endl;
+
 	}
 }
