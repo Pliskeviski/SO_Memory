@@ -36,6 +36,9 @@ void* WorstFit::InsereProcesso(Processo* p, LISTA lista) {
 				sequenciaAtual = 0;
 			}
 		}
+
+		if (nodeInicioSequencia != NULL && melhorPos == NULL)
+			melhorPos = nodeInicioSequencia;
 	}
 	else if (lista == LISTA::LIVRE) {
 		int melhorSequencia = -1;
