@@ -9,6 +9,8 @@ void* BestFit::InsereProcesso(Processo* p, LISTA lista) {
 
 	void* melhorPos = NULL;
 
+	lista = (LISTA)(lista - 1);
+
 	if (lista == LISTA::PRINCIPAL) {
 		int melhorSequencia = -1;
 		void* nodeInicioSequencia = NULL;
@@ -29,7 +31,7 @@ void* BestFit::InsereProcesso(Processo* p, LISTA lista) {
 			}
 			else if (node->conteudo != NULL && inSequencia) {
 				inSequencia = false;
-				if (sequenciaAtual < melhorSequencia || melhorSequencia == -1) {
+				if (sequenciaAtual < melhorSequencia || melhorSequencia == -1 && sequenciaAtual >= p->EspacoMemoria) {
 					melhorSequencia = sequenciaAtual;
 					melhorPos = nodeInicioSequencia;
 				}
@@ -41,22 +43,32 @@ void* BestFit::InsereProcesso(Processo* p, LISTA lista) {
 		if (nodeInicioSequencia != NULL && melhorPos == NULL)
 			melhorPos = nodeInicioSequencia;
 	}
-	else if (lista == LISTA::LIVRE) {
+	else if (lista == LISTA::LIVRE) { // TODO - CHECK
 		int melhorSequencia = -1;
 		
 		for (int i = 0; i < this->l_livres->GetSize(); i++) {
 			auto node = ((EspacoMemoria*)this->l_livres->get(i)->conteudo);
-			if (node->sequencia < melhorSequencia || melhorSequencia == -1) {
+			if (node->sequencia < melhorSequencia || melhorSequencia == -1 && node->sequencia >= p->EspacoMemoria) {
 				melhorPos = ((EspacoMemoria*)this->l_livres->get(i)->conteudo)->node;
 				melhorSequencia = node->sequencia;
 			}
 		}
 	}
-	else if (lista == LISTA::LIVREORDENADA) {
-		Node* node = this->l_livres_ordenada->get(0);
+	else if (lista == LISTA::LIVREORDENADA) { // CHECK
+		/*Node* node = this->l_livres_ordenada->get(0);
 		if (node == NULL) goto fim;
 
 		melhorPos = ((EspacoMemoria*)node->conteudo)->node;
+*/
+		int melhorSequencia = -1;
+
+		for (int i = 0; i < this->l_livres_ordenada->GetSize(); i++) {
+			auto node = ((EspacoMemoria*)this->l_livres_ordenada->get(i)->conteudo);
+			if (node->sequencia < melhorSequencia || melhorSequencia == -1 && node->sequencia >= p->EspacoMemoria) {
+				melhorPos = ((EspacoMemoria*)this->l_livres_ordenada->get(i)->conteudo)->node;
+				melhorSequencia = node->sequencia;
+			}
+		}
 	}
 	fim:
 

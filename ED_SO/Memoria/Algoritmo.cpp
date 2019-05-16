@@ -8,6 +8,7 @@
 
 Algoritmo::Algoritmo() {
 	this->l_livres_ocupados = new Lista<Processo>();
+
 	this->l_livres = new Lista<EspacoMemoria>();
 	this->l_livres_ordenada = new Lista<EspacoMemoria>();
 	this->l_ocupados = new Lista<EspacoMemoria>();
@@ -17,14 +18,29 @@ Algoritmo::Algoritmo() {
 int Algoritmo::Init(const char* filePath) {
 	if (this->CarregaProcessosArquivo(filePath) == -1) return -1;
 
-	for (Processo p : this->processos_arquivo)
-		this->Insere(&p, LISTA::PRINCIPAL, true);
+	for (Processo p : this->processos_arquivo) {
+		for(int i = 0; i < p.EspacoMemoria; i++)
+			this->Insere(&p, LISTA::PRINCIPAL, true);
+	}
 	
 	return 0;
 }
 
 Node* Algoritmo::InserePosicao(Processo* p, Node* node) {
-	return this->l_livres_ocupados->InserirConteudo(p, node);
+	Node* primeiro = NULL;
+	for (int i = 0; i < p->EspacoMemoria; i++) {
+		Node* inserido = NULL;
+		if (primeiro == NULL)
+			inserido = primeiro = this->l_livres_ocupados->InserirConteudo(p, node);
+		else
+			inserido = this->l_livres_ocupados->InserirConteudo(p, node);
+		
+		if (inserido == NULL) return NULL; // Erro
+
+		node = node->proximo;
+	}
+
+	return primeiro;
 }
 
 bool Algoritmo::RemoveProcesso(const char* nome) {
@@ -138,7 +154,7 @@ double Algoritmo::Insere(Processo* p, LISTA lista, bool dinamica) {
 	void* retorno = NULL;
 
 	if(dinamica)
-		retorno = (void*)this->l_livres_ocupados->Inserir(processo);
+		retorno = (void*)this->l_livres_ocupados->Inserir(processo); // Processo vai ser inserido no fim da lista
 	else
 		retorno = this->InsereProcesso(processo, lista);
 

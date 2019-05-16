@@ -7,7 +7,7 @@ FirstFit::FirstFit() : Algoritmo() {
 
 void* FirstFit::InsereProcesso(Processo* p, LISTA lista) {
 
-	if (lista == LISTA::PRINCIPAL) {
+	if (lista == LISTA::PRINCIPAL) { // TODO
 		for (int i = 0; i < this->l_livres_ocupados->GetSize(); i++) {
 			auto node = this->l_livres_ocupados->get(i);
 			if (node->conteudo == NULL) {
@@ -16,7 +16,7 @@ void* FirstFit::InsereProcesso(Processo* p, LISTA lista) {
 			}
 		}
 	}
-	else if (lista == LISTA::LIVRE) {
+	else if (lista == LISTA::LIVRE) { // TODO
 		for (int i = 0; i < this->l_livres->GetSize(); i++) {
 			auto node = ((EspacoMemoria*)this->l_livres->get(i)->conteudo)->node;
 			if (node->conteudo == NULL) {
@@ -25,7 +25,7 @@ void* FirstFit::InsereProcesso(Processo* p, LISTA lista) {
 			}
 		}
 	}
-	else if (lista == LISTA::LIVREORDENADA) {
+	else if (lista == LISTA::LIVREORDENADA) { // TODO
 		for (int i = 0; i < this->l_livres_ordenada->GetSize(); i++) {
 			auto node = ((EspacoMemoria*)this->l_livres_ordenada->get(i)->conteudo)->node;
 			if (node->conteudo == NULL) {

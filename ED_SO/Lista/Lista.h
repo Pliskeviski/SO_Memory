@@ -54,6 +54,8 @@ inline Node* Lista<T>::Inserir(T* item) {
 
 template<typename T>
 inline Node* Lista<T>::InserirConteudo(T* conteudo, Node* node) {
+	if (node->conteudo != NULL) return NULL; // Nao deixa inserir onde já existe um conteudo
+
 	node->conteudo = conteudo;
 	return node;
 }
@@ -94,6 +96,8 @@ inline bool Lista<T>::RemoverConteudo(T conteudo) {
 	Node* prev = this->cabeca;
 	Node* node = this->cabeca->proximo;
 
+	bool removido = false;
+
 	if (prev != NULL && prev->conteudo != NULL && *(T*)prev->conteudo == conteudo) {
 		this->cabeca->conteudo = NULL;
 		return true;
@@ -102,13 +106,13 @@ inline bool Lista<T>::RemoverConteudo(T conteudo) {
 	for (; node != NULL; node = node->proximo) {
 		if (node->conteudo != NULL && *(T*)node->conteudo == conteudo) {
 			node->conteudo = NULL;
-			return true;
+			removido = true;
 		}
 
 		prev = node;
 	}
 
-	return false;
+	return removido;
 }
 
 template<typename T>
