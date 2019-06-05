@@ -2,7 +2,7 @@
 
 #include <iomanip>
 
-FirstFit::FirstFit() : Algoritmo() {
+FirstFit::FirstFit() : Algoritmo("FirstFit") {
 }
 
 void* FirstFit::InsereProcesso(Processo* p, LISTA lista) {
@@ -40,6 +40,8 @@ void* FirstFit::InsereProcesso(Processo* p, LISTA lista) {
 }
 
 void FirstFit::Print() {
+	std::cout << std::setw(5) << std::right << "Memoria " << this->getName() << std::endl;
+
 	// Principal
 	std::cout << std::setw(20) << std::right << "\nMemoria principal" << std::endl;
 	std::cout << std::setw(5) << std::right << "Index" << " - " << "Nome" << std::endl;

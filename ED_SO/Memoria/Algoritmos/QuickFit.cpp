@@ -1,74 +1,18 @@
-#include "WorstFit.h"
+#include "QuickFit.h"
 
 #include <iomanip>
 
-WorstFit::WorstFit() : Algoritmo("WorstFit") {
+QuickFit::QuickFit() : Algoritmo("QuickFit") {
+	this->tamanhos.push_back(4);
+	this->tamanhos.push_back(8);
+	this->tamanhos.push_back(16);
+
+	// Listas com os tamanhos mais "comuns"
+	for (int i : this->tamanhos)
+		this->listasEspaco.insert(std::pair<int, Lista<EspacoMemoria>*>(i, new Lista<EspacoMemoria>()));
 }
 
-void* WorstFit::InsereProcesso(Processo* p, LISTA lista) {
-	void* melhorPos = NULL;
-
-	if (lista == LISTA::PRINCIPAL) {
-		int melhorSequencia = -1;
-		void* nodeInicioSequencia = NULL;
-
-		int sequenciaAtual = 0;
-		bool inSequencia = false;
-
-		for (int i = 0; i < this->l_livres_ocupados->GetSize(); i++) {
-			auto node = this->l_livres_ocupados->get(i);
-
-			if (node->conteudo == NULL && !inSequencia) {
-				inSequencia = true;
-				sequenciaAtual++;
-				nodeInicioSequencia = node;
-			}
-			else if (node->conteudo == NULL) {
-				sequenciaAtual++;
-			}
-			else if (node->conteudo != NULL && inSequencia) {
-				inSequencia = false;
-				if (sequenciaAtual > melhorSequencia || melhorSequencia == -1) {
-					melhorSequencia = sequenciaAtual;
-					melhorPos = nodeInicioSequencia;
-				}
-
-				sequenciaAtual = 0;
-			}
-		}
-
-		if (nodeInicioSequencia != NULL && melhorPos == NULL)
-			melhorPos = nodeInicioSequencia;
-	}
-	else if (lista == LISTA::LIVRE) {
-		int melhorSequencia = -1;
-
-		for (int i = 0; i < this->l_livres->GetSize(); i++) {
-			auto node = ((EspacoMemoria*)this->l_livres->get(i)->conteudo);
-			if (node->sequencia > melhorSequencia || melhorSequencia == -1) {
-				melhorPos = ((EspacoMemoria*)this->l_livres->get(i)->conteudo)->node;
-				melhorSequencia = node->sequencia;
-			}
-		}
-	}
-	else if (lista == LISTA::LIVREORDENADA) {
-		Node* node = this->l_livres_ordenada->get(this->l_livres_ordenada->GetSize() - 1);
-		if (node == NULL) goto fim;
-
-		melhorPos = ((EspacoMemoria*)node->conteudo)->node;
-	}
-	fim:
-
-	if (melhorPos != NULL) {
-		std::cout << "Inserindo processo " << p->Nome << std::endl;
-		return this->InserePosicao(p, (Node*)melhorPos);
-	}
-
-	std::cout << "Nenhuma posicao livre foi encontrada\n";
-	return NULL;
-}
-
-void WorstFit::Print() {
+void QuickFit::Print() {
 	// Principal
 	std::cout << std::setw(20) << std::right << "\nMemoria principal" << std::endl;
 	std::cout << std::setw(5) << std::right << "Index" << " - " << "Nome" << std::endl;
@@ -113,4 +57,62 @@ void WorstFit::Print() {
 
 		std::cout << std::setw(5) << std::right << node->index << " - " << conteudo->sequencia << std::endl;
 	}
+
+	// Espacos
+	std::cout << std::setw(20) << std::right << "\nEspacos" << std::endl;
+	std::cout << std::setw(5) << std::right << "Espacos" << " - " <<  "Index" << " - " << "Sequencia" << std::endl;
+	for (int i : this->tamanhos) {
+		EspacoMemoria* conteudo = (EspacoMemoria*)this->listasEspaco[i]->get(i)->conteudo;
+		auto node = conteudo->node;
+		std::cout << std::setw(5) << std::right << i << node->index << " - " << conteudo->sequencia << std::endl;
+	}
+}
+
+void QuickFit::OrganizaListas() {
+	this->OrganizaOcupados();
+	this->OrganizaLivres();
+	this->OrganizaOcupadasOrdem();
+	this->OrganizaListasEspacos();
+}
+
+void* QuickFit::InsereProcesso(Processo* p, LISTA lista) {
+
+	return nullptr;
+}
+
+void QuickFit::OrganizaListasEspacos() {
+	this->listasEspaco.clear();
+
+	void* nodeInicioSequencia = NULL;
+
+	int sequenciaAtual = 0;
+	bool inSequencia = false;
+
+	for (int i = 0; i < this->l_livres_ocupados->GetSize(); i++) {
+		auto node = this->l_livres_ocupados->get(i);
+		
+		if (node->conteudo == NULL && !inSequencia) {
+			inSequencia = true;
+			sequenciaAtual++;
+			nodeInicioSequencia = node;
+		}
+		else if (node->conteudo == NULL) {
+			sequenciaAtual++;
+		}
+		else if (node->conteudo != NULL && inSequencia) {
+			inSequencia = false;
+
+			for (int i = this->tamanhos.size(); i > 0; i--) {
+				if (this->tamanhos[i] == i) {
+					EspacoMemoria* espacoMemoria = new EspacoMemoria(((EspacoMemoria*)node->conteudo)->node, ((EspacoMemoria*)node->conteudo)->sequencia);
+					this->listasEspaco[this->tamanhos[i]]->Inserir(espacoMemoria);
+				}
+			}
+			
+			sequenciaAtual = 0;
+			nodeInicioSequencia = NULL;
+		}
+	}
+
+	
 }

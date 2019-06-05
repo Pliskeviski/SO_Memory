@@ -6,7 +6,7 @@
 #include <chrono> 
 #include <iomanip>
 
-Algoritmo::Algoritmo() {
+Algoritmo::Algoritmo(std::string nome) : nome(nome) {
 	this->l_livres_ocupados = new Lista<Processo>();
 
 	this->l_livres = new Lista<EspacoMemoria>();
@@ -35,7 +35,7 @@ Node* Algoritmo::InserePosicao(Processo* p, Node* node) {
 		else
 			inserido = this->l_livres_ocupados->InserirConteudo(p, node);
 		
-		if (inserido == NULL) return NULL; // Erro
+		if (inserido == NULL) return NULL;
 
 		node = node->proximo;
 	}
@@ -184,18 +184,21 @@ double Algoritmo::RemoveNome(const char* nome) {
 	return t;
 }
 
-void Algoritmo::Remove() {
+int Algoritmo::Remove() {
 	auto node = this->l_livres_ordenada->get(0);
 	if (node == NULL) {
 		std::cout << "Nenhuma posicao livre para exclusao\n";
+		return -1;
 	}
 	else {
 		EspacoMemoria* espaco = (EspacoMemoria*)node->conteudo;
 		if (this->l_livres_ocupados->RemoveNode((Node*)espaco->node)) {
-			std::cout << "Memora reduzida\n";
+			return 0;
 		}
 		this->OrganizaListas();
 	}
+
+	return -1;
 }
 
 void Algoritmo::Print() {
@@ -223,6 +226,18 @@ void Algoritmo::Print() {
 	std::cout << std::setw(20) << std::right << "\nLivres Ordenadas" << std::endl;
 	std::cout << std::setw(5) << std::right << "Index" << " - " << "Sequencia" << std::endl;
 	this->l_livres_ordenada->Print();
+}
+
+void Algoritmo::AdicionaOperacao(Operacao op) {
+	this->operacoes.push_back(op);
+}
+
+std::vector<Operacao>& Algoritmo::RecuperaOperacoes() {
+	return this->operacoes;
+}
+
+std::string& Algoritmo::getName() {
+	return this->nome;
 }
 
 Algoritmo::~Algoritmo() {

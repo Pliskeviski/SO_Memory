@@ -8,17 +8,7 @@
 #include "../Memoria/Algoritmos/FirstFit.h"
 #include "../Memoria/Algoritmos/BestFit.h"
 #include "../Memoria/Algoritmos/WorstFit.h"
-
-struct Operacao {
-	/*
-		Operacao 1 = Insercao
-		Operacao 2 = Remocao
-	*/
-	Operacao(int operacao, long tempo, LISTA lista = LISTA::NOLISTA) : operacao(operacao), tempo(tempo), lista(lista){ }
-	int operacao;
-	long tempo;
-	LISTA lista;
-};
+#include "../Memoria/Algoritmos/QuickFit.h"
 
 struct AdicionaProcesso {
 	AdicionaProcesso(Processo& processo, int algoritmo, LISTA lista) : processo(processo), algoritmo(algoritmo), lista(lista) {}
@@ -47,13 +37,17 @@ private:
 	void ReduzirMemoria(void* p = NULL);
 	void ExecutaArquivo(void* p = NULL);
 
-	void ImprimeVetorEstatistica(std::vector<Operacao>& vetor);
+	void ImprimeVetorEstatistica(Algoritmo* algoritmo);
+
+	Algoritmo* RecuperaAlgoritmo(int alg = -1);
 
 	FirstFit* firstFit;
 	BestFit* bestFit;
 	WorstFit* worstFit;
+	QuickFit* quickFit;
 
-	std::vector<Operacao> operacoesFirstFit;
+	/*std::vector<Operacao> operacoesFirstFit;
 	std::vector<Operacao> operacoesBestFit;
 	std::vector<Operacao> operacoesWorstFit;
+	std::vector<Operacao> operacoesQuickFit;*/
 };

@@ -15,10 +15,12 @@ MenuMemoria::MenuMemoria(std::string arquivo) {
 	this->firstFit = new FirstFit();
 	this->bestFit = new BestFit();
 	this->worstFit = new WorstFit();
+	this->quickFit = new QuickFit();
 
 	this->firstFit->Init(arquivo.c_str());
 	this->bestFit->Init(arquivo.c_str());
 	this->worstFit->Init(arquivo.c_str());
+	this->quickFit->Init(arquivo.c_str());
 
 	this->addItem("0 - Novo Processo", BIND_FN(MenuMemoria::NovoProcesso));
 	this->addItem("1 - Remover Processo", BIND_FN(MenuMemoria::RemoverProcesso));
@@ -34,8 +36,8 @@ void MenuMemoria::NovoProcesso(void* p) {
 	std::string nome;
 	unsigned int tamanho;
 	std::string dinamica;
-	unsigned int alg;
 	unsigned int lista;
+	Algoritmo* algoritmo = NULL;
 
 	if (p == NULL) {
 		std::cin.get();
@@ -46,14 +48,13 @@ void MenuMemoria::NovoProcesso(void* p) {
 		std::cout << "Digite o tamanho do processo: \n";
 		std::cin >> tamanho;
 
+		algoritmo = this->RecuperaAlgoritmo();
+
 		std::cin.get();
 
 		std::cout << "Memoria dinamica? S|N \n";
 		std::getline(std::cin, dinamica);
-
-		std::cout << "Digite o algoritmo a ser utilizado: \n1-First Fit\n2-BestFit\n3-WorstFit \n";
-		std::cin >> alg;
-
+		
 		std::cout << "Digite a lista a ser utilizada: \n1-Lista simples\n2-Lista livre\n3-Lista livre ordenada\n";
 		std::cin >> lista;
 	}
@@ -62,48 +63,23 @@ void MenuMemoria::NovoProcesso(void* p) {
 		nome = ap->processo.Nome;
 		tamanho = ap->processo.EspacoMemoria;
 		dinamica = ap->processo.Alocacao == true ? "S" : "N";
-		alg = ap->algoritmo;
+		algoritmo = this->RecuperaAlgoritmo(ap->algoritmo);
 		lista = ap->lista;
-
-		//delete ap;
-	}
-
-	if (alg < 1 || alg > 4) {
-		std::cout << "Algoritmo invalido.\n";
-		return;
 	}
 
 	Processo processo = Processo(nome.c_str(), (dinamica == "S"), tamanho);
 
-	double tempo;
-
-	switch (alg) {
-	case 1:
-		tempo = this->firstFit->Insere(&processo, (LISTA)lista);
-		if (tempo > 0)
-			this->operacoesFirstFit.push_back(Operacao(1, tempo, (LISTA)lista));
-		break;
-	case 2:
-		tempo = this->bestFit->Insere(&processo, (LISTA)lista);
-		if (tempo > 0)
-			this->operacoesBestFit.push_back(Operacao(1, tempo, (LISTA)lista));
-		break;
-	case 3:
-		tempo = this->worstFit->Insere(&processo, (LISTA)lista);
-		if (tempo > 0)
-			this->operacoesWorstFit.push_back(Operacao(1, tempo, (LISTA)lista));
-		break;
-	default:
-		break;
-	}
-
-	if (tempo > 0)
+	double tempo = algoritmo->Insere(&processo, (LISTA)lista);
+	
+	if (tempo > 0) {
+		algoritmo->AdicionaOperacao(Operacao(1, tempo, (LISTA)lista));
 		std::cout << "Processo inserido em: " << tempo << " microseconds\n\n";
+	}
 }
 
 void MenuMemoria::RemoverProcesso(void* p) {
 	std::string nome;
-	unsigned int alg;
+	Algoritmo* algoritmo = NULL;
 
 	if (p == NULL) {
 		std::cin.get();
@@ -111,79 +87,28 @@ void MenuMemoria::RemoverProcesso(void* p) {
 		std::cout << "Digite o nome do processo: \n";
 		std::getline(std::cin, nome);
 		
-		std::cout << "Digite o algoritmo a ser utilizado: \n1-First Fit\n2-BestFit\n3-WorstFit \n";
-		std::cin >> alg;
+		algoritmo = this->RecuperaAlgoritmo();
 	}
 	else {
 		RemoveProcesso* rp = (RemoveProcesso*)p;
 		nome = rp->nome_processo;
-		alg = rp->algoritmo;
-
-		//delete rp;
+		algoritmo = this->RecuperaAlgoritmo(rp->algoritmo);
 	}
 
-	if (alg < 1 || alg > 4) {
-		std::cout << "Algoritmo invalido.\n";
-		return;
-	}
+	double tempo = algoritmo->RemoveNome(nome.c_str());
 
-	double tempo;
-
-	switch (alg) {
-	case 1:
-		tempo = this->firstFit->RemoveNome(nome.c_str());
-		if (tempo > 0)
-			this->operacoesFirstFit.push_back(Operacao(2, tempo));
-		break;
-	case 2:
-		tempo = this->bestFit->RemoveNome(nome.c_str());
-		if (tempo > 0)
-			this->operacoesBestFit.push_back(Operacao(2, tempo));
-		break;
-	case 3:
-		tempo = this->worstFit->RemoveNome(nome.c_str());
-		if (tempo > 0)
-			this->operacoesWorstFit.push_back(Operacao(2, tempo));
-		break;
-	default:
-		break;
-	}
-
-	if (tempo > 0)
+	if (tempo > 0) {
 		std::cout << "Processo removido em: " << tempo << " microseconds\n\n";
+		algoritmo->AdicionaOperacao(Operacao(2, tempo));
+	}
 }
 
 void MenuMemoria::MostraMemoria(void* p) {
 	limpar();
 
-	unsigned int alg;
-	
-	std::cout << "Digite o algoritmo a ser utilizado: \n1-First Fit\n2-BestFit\n3-WorstFit \n";
-	std::cin >> alg;
+	Algoritmo* algoritmo = this->RecuperaAlgoritmo();
 
-	if (alg < 1 || alg > 4) {
-		std::cout << "Algoritmo invalido.\n";
-		return;
-	}
-
-	limpar();
-
-	switch (alg) {
-	case 1:
-		std::cout << std::setw(5) << std::right << "Memoria FirstFit" << std::endl;
-		this->firstFit->Print();
-		break;
-	case 2:
-		std::cout << std::setw(5) << std::right << "Memoria BestFit" << std::endl;
-		this->bestFit->Print();
-		break;
-	case 3:
-		std::cout << std::setw(5) << std::right << "Memoria WorstFit" << std::endl;
-		this->worstFit->Print();
-		break;
-	default:
-		break;
-	}
+	algoritmo->Print();
 
 	if (p == NULL) {
 		std::cout << "\nPressione enter para continuar...\n";
@@ -195,47 +120,10 @@ void MenuMemoria::MostraMemoria(void* p) {
 }
 
 void MenuMemoria::MostrarEstatistica(void* p) {
-	limpar();
-
-	unsigned int alg;
 	
-	std::cout << "Digite o algoritmo a ser utilizado: \n1-First Fit\n2-BestFit\n3-WorstFit\n4-Todos\n";
-	std::cin >> alg;
-
-	if (alg < 1 || alg > 5) {
-		std::cout << "Algoritmo invalido.\n";
-		return;
-	}
-
-	limpar();
-
-	switch (alg) {
-	case 1:
-		std::cout << std::setw(5) << std::right << "Estatisticas FirstFit" << std::endl;
-		this->ImprimeVetorEstatistica(this->operacoesFirstFit);
-		break;
-	case 2:
-		std::cout << std::setw(5) << std::right << "Estatisticas BestFit" << std::endl;
-		this->ImprimeVetorEstatistica(this->operacoesBestFit);
-		break;
-	case 3:
-		std::cout << std::setw(5) << std::right << "Estatisticas WorstFit" << std::endl;
-		this->ImprimeVetorEstatistica(this->operacoesWorstFit);
-		break;
-	case 4:
-		std::cout << std::setw(5) << std::right << "Estatisticas FirstFit" << std::endl;
-		this->ImprimeVetorEstatistica(this->operacoesFirstFit);
-		std::cout << std::endl;
-		
-		std::cout << std::setw(5) << std::right << "Estatisticas BestFit" << std::endl;
-		this->ImprimeVetorEstatistica(this->operacoesBestFit);
-		std::cout << std::endl;
-
-		std::cout << std::setw(5) << std::right << "Estatisticas WorstFit" << std::endl;
-		this->ImprimeVetorEstatistica(this->operacoesWorstFit);
-		std::cout << std::endl;
-		break;
-	}
+	Algoritmo* algoritmo = this->RecuperaAlgoritmo();
+	
+	this->ImprimeVetorEstatistica(algoritmo);
 
 	if (p == NULL) {
 		std::cout << "\nPressione enter para continuar...\n";
@@ -249,35 +137,9 @@ void MenuMemoria::MostrarEstatistica(void* p) {
 void MenuMemoria::ExpandirMemoria(void* p) {
 	limpar();
 
-	unsigned int alg;
-	if (p == NULL) {
-		std::cout << "Digite o algoritmo a ser utilizado: \n1-First Fit\n2-BestFit\n3-WorstFit \n";
-		std::cin >> alg;
-	}
-	else {
-		alg = *(int*)p;
-	}
+	Algoritmo* algoritmo = this->RecuperaAlgoritmo();
 
-	if (alg < 1 || alg > 4) {
-		std::cout << "Algoritmo invalido.\n";
-		return;
-	}
-
-	limpar();
-
-	switch (alg) {
-	case 1:
-		this->firstFit->Insere(NULL, LISTA::PRINCIPAL, true);
-		break;
-	case 2:
-		this->bestFit->Insere(NULL, LISTA::PRINCIPAL, true);
-		break;
-	case 3:
-		this->worstFit->Insere(NULL, LISTA::PRINCIPAL, true);
-		break;
-	default:
-		break;
-	}
+	algoritmo->Insere(NULL, LISTA::PRINCIPAL, true);
 
 	if (p == NULL) {
 		std::cout << "\nPressione enter para continuar...\n";
@@ -291,34 +153,19 @@ void MenuMemoria::ExpandirMemoria(void* p) {
 void MenuMemoria::ReduzirMemoria(void* p) {
 	limpar();
 
-	unsigned int alg;
-	if (p == NULL) {
-		std::cout << "Digite o algoritmo a ser utilizado: \n1-First Fit\n2-BestFit\n3-WorstFit \n";
-		std::cin >> alg;
-	}
-	else {
-		alg = *(int*)p;
-	}
-
-	if (alg < 1 || alg > 4) {
-		std::cout << "Algoritmo invalido.\n";
-		return;
-	}
+	Algoritmo* algoritmo = this->RecuperaAlgoritmo();
 
 	limpar();
 
-	switch (alg) {
-	case 1:
-		this->firstFit->Remove();
-		break;
-	case 2:
-		this->bestFit->Remove();
-		break;
-	case 3:
-		this->worstFit->Remove();
-		break;
-	default:
-		break;
+	int tamanho = 0;
+	
+	std::cout << "Digite o tamanho a ser removido: \n";
+	std::cin >> tamanho;
+
+	for (int i = 0; i < tamanho; i++) {
+		if (algoritmo->Remove() == 0) {
+			std::cout << "Memoria reduzida\n";
+		}
 	}
 
 	if (p == NULL) {
@@ -395,7 +242,11 @@ void MenuMemoria::ExecutaArquivo(void* p) {
 
 }
 
-void MenuMemoria::ImprimeVetorEstatistica(std::vector<Operacao>& vetor) {
+void MenuMemoria::ImprimeVetorEstatistica(Algoritmo* algoritmo) {
+	auto vetor = algoritmo->RecuperaOperacoes();
+	
+	std::cout << std::setw(5) << std::right << "Estatisticas " << algoritmo->getName() << std::endl;
+
 	if (vetor.size() == 0) {
 		std::cout << "Nenhuma operacao realizada com esse algoritmo\n";
 		return;
@@ -427,4 +278,34 @@ void MenuMemoria::ImprimeVetorEstatistica(std::vector<Operacao>& vetor) {
 		std::cout << std::setw(5) << std::right << operacao << " - " << std::setw(5) << o.tempo << " - " << std::setw(5) << lista << std::endl;
 
 	}
+}
+
+Algoritmo* MenuMemoria::RecuperaAlgoritmo(int alg) {
+	while (alg < 0 || alg > 4) {
+		std::cout << "Digite o algoritmo a ser utilizado: \n1-First Fit\n2-BestFit\n3-WorstFit\n4-QuickFit \n";
+		std::cin >> alg;
+
+		if (alg < 0 || alg > 4) {
+			std::cout << "Algoritmo invalid\n";
+		}
+	}
+
+	switch (alg) {
+	case 1:
+		return this->firstFit;
+		break;
+	case 2:
+		return this->bestFit;
+		break;
+	case 3:
+		return this->worstFit;
+		break;
+	case 4:
+		return this->quickFit;
+		break;
+	default:
+		return NULL;
+		break;
+	}
+	return NULL;
 }

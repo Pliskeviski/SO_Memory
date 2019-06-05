@@ -12,10 +12,21 @@ enum LISTA {
 	LIVREORDENADA = 2
 };
 
+struct Operacao {
+	/*
+		Operacao 1 = Insercao
+		Operacao 2 = Remocao
+	*/
+	Operacao(int operacao, long tempo, LISTA lista = LISTA::NOLISTA) : operacao(operacao), tempo(tempo), lista(lista) {}
+	int operacao;
+	long tempo;
+	LISTA lista;
+};
+
 // Classe base para a implementacao dos algoritmos
 class Algoritmo {
 public:
-	Algoritmo();
+	Algoritmo(std::string nome);
 	int Init(const char* filePath);
 
 	/*
@@ -26,10 +37,14 @@ public:
 	*/
 	double Insere(Processo* p, LISTA lista, bool dinamica = false);
 	double RemoveNome(const char* nome);
-	void Remove();
+	int Remove();
 
 	virtual void Print();
+	
+	void AdicionaOperacao(Operacao op);
+	std::vector<Operacao>& RecuperaOperacoes();
 
+	std::string& getName();
 protected:
 	virtual ~Algoritmo();
 	
@@ -52,17 +67,18 @@ protected:
 	Lista<EspacoMemoria>* l_ocupados;
 	Lista<EspacoMemoria>* l_ocupados_ordenado;
 
+	virtual void OrganizaListas();
+	void OrganizaOcupados();
+	void OrganizaLivres();
+	void OrganizaOcupadasOrdem();
 private:
 	/*
 		Carrega os Processos do arquivo para um vetor
 	*/
 	int CarregaProcessosArquivo(const char* filePath, int max_itens = 0);
 	std::vector<Processo> processos_arquivo;
-
-	void OrganizaListas();
-	void OrganizaOcupados();
-	void OrganizaLivres();
-	void OrganizaOcupadasOrdem();
+	std::vector<Operacao> operacoes;
+	std::string nome;
 };
 
 

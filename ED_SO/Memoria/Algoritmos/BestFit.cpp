@@ -2,7 +2,7 @@
 
 #include <iomanip>
 
-BestFit::BestFit() {
+BestFit::BestFit() : Algoritmo("BestFit") {
 }
 
 void* BestFit::InsereProcesso(Processo* p, LISTA lista) {
