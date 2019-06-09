@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <iomanip>
 
 #include "../Helper/Node.h"
 
@@ -58,7 +59,7 @@ inline Node* Lista<T>::Inserir(T* item) {
 
 template<typename T>
 inline Node* Lista<T>::InserirConteudo(T* conteudo, Node* node) {
-	if (node->conteudo != NULL) return NULL; // Nao deixa inserir onde já existe um conteudo
+	if (node->conteudo != NULL) return NULL; // Nao deixa inserir onde jï¿½ existe um conteudo
 
 	node->conteudo = conteudo;
 	return node;
