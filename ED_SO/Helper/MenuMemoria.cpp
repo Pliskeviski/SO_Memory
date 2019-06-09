@@ -182,24 +182,6 @@ void MenuMemoria::ExecutaArquivo(void* p) {
 
 	const char* script = "script.so";
 
-	/*
-		Insercao:
-		0 Nome Tamanho Alocacao Algoritmo Lista
-		Ex.: 0 P10 340 1 1 1
-
-		Remocao:
-		1 Nome Algoritmo
-		Ex.: 1 P5 1
-
-		Expandir Memoria:
-		4 Algoritmo
-		Ex.: 4 1
-
-		Reduzir Memoria:
-		4 Algoritmo
-		Ex.: 5 1
-	*/
-
 	if (script != NULL) {
 		std::cout << "\n";
 		std::ifstream arquivo(script);
@@ -265,7 +247,7 @@ void MenuMemoria::ImprimeVetorEstatistica(Algoritmo* algoritmo) {
 			lista = "";
 			break;
 		case LISTA::PRINCIPAL:
-			lista = "Principal";
+			lista = "Livres Ocupados";
 			break;
 		case LISTA::LIVRE:
 			lista = "Livre";

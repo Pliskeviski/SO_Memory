@@ -12,63 +12,8 @@ QuickFit::QuickFit() : Algoritmo("QuickFit") {
 		this->listasEspaco.insert(std::pair<int, Lista<EspacoMemoria>*>(i, new Lista<EspacoMemoria>()));
 }
 
-void QuickFit::Print() {
-	// Principal
-	std::cout << std::setw(20) << std::right << "\nMemoria principal" << std::endl;
-	std::cout << std::setw(5) << std::right << "Index" << " - " << "Nome" << std::endl;
-	this->l_livres_ocupados->Print();
-
-	// Ocupados
-	std::cout << std::setw(20) << std::right << "\nOcupados" << std::endl;
-	std::cout << std::setw(5) << std::right << "Index" << " - " << "Sequencia" << std::endl;
-	for (int i = 0; i < this->l_ocupados->GetSize(); i++) {
-		EspacoMemoria* conteudo = (EspacoMemoria*)this->l_ocupados->get(i)->conteudo;
-		auto node = conteudo->node;
-
-		std::cout << std::setw(5) << std::right << node->index << " - " << conteudo->sequencia << std::endl;
-	}
-
-	// Ocupados Ordenados
-	std::cout << std::setw(20) << std::right << "\nOcupados Ordenados" << std::endl;
-	std::cout << std::setw(5) << std::right << "Index" << " - " << "Sequencia" << std::endl;
-	for (int i = 0; i < this->l_ocupados_ordenado->GetSize(); i++) {
-		EspacoMemoria* conteudo = (EspacoMemoria*)this->l_ocupados_ordenado->get(i)->conteudo;
-		auto node = conteudo->node;
-
-		std::cout << std::setw(5) << std::right << node->index << " - " << conteudo->sequencia << std::endl;
-	}
-
-	// Livres
-	std::cout << std::setw(20) << std::right << "\nLivres" << std::endl;
-	std::cout << std::setw(5) << std::right << "Index" << " - " << "Sequencia" << std::endl;
-	for (int i = 0; i < this->l_livres->GetSize(); i++) {
-		EspacoMemoria* conteudo = (EspacoMemoria*)this->l_livres->get(i)->conteudo;
-		auto node = conteudo->node;
-
-		std::cout << std::setw(5) << std::right << node->index << " - " << conteudo->sequencia << std::endl;
-	}
-
-	// Livres
-	std::cout << std::setw(20) << std::right << "\nLivres Ordenadas" << std::endl;
-	std::cout << std::setw(5) << std::right << "Index" << " - " << "Sequencia" << std::endl;
-	for (int i = 0; i < this->l_livres_ordenada->GetSize(); i++) {
-		EspacoMemoria* conteudo = (EspacoMemoria*)this->l_livres_ordenada->get(i)->conteudo;
-		auto node = conteudo->node;
-
-		std::cout << std::setw(5) << std::right << node->index << " - " << conteudo->sequencia << std::endl;
-	}
-
-	// Espacos
-	std::cout << std::setw(20) << std::right << "\nEspacos" << std::endl;
-	std::cout << std::setw(5) << std::right << "Espacos" << " - " <<  "Index" << " - " << "Sequencia" << std::endl;
-	for (int i : this->tamanhos) {
-		EspacoMemoria* conteudo = (EspacoMemoria*)this->listasEspaco[i]->get(i)->conteudo;
-		auto node = conteudo->node;
-		std::cout << std::setw(5) << std::right << i << node->index << " - " << conteudo->sequencia << std::endl;
-	}
-}
-
 void QuickFit::OrganizaListas() {
+	this->OrganizaLivresOcupadas();
 	this->OrganizaOcupados();
 	this->OrganizaLivres();
 	this->OrganizaOcupadasOrdem();
@@ -76,20 +21,40 @@ void QuickFit::OrganizaListas() {
 }
 
 void* QuickFit::InsereProcesso(Processo* p, LISTA lista) {
+	int melhor = -1;
+	for (int i : this->tamanhos) {
+		if (i > p->EspacoMemoria) {
+			melhor = i;
+		}
+		else {
+			break;
+		}
+	}
 
-	return nullptr;
+	if (melhor == -1)
+		return NULL;
+	
+	auto espaco = this->listasEspaco[melhor];
+
+	if (espaco->GetSize() == 0) {
+		std::cout << "Espaço insuficiente\n";
+		return NULL;
+	}
+
+	return this->InserePosicao(p, espaco->get(0));
 }
 
 void QuickFit::OrganizaListasEspacos() {
-	this->listasEspaco.clear();
+	for (int i : this->tamanhos) 
+		this->listasEspaco[i]->Reset();
 
 	void* nodeInicioSequencia = NULL;
 
 	int sequenciaAtual = 0;
 	bool inSequencia = false;
 
-	for (int i = 0; i < this->l_livres_ocupados->GetSize(); i++) {
-		auto node = this->l_livres_ocupados->get(i);
+	for (int i = 0; i < this->l_memoria_principal->GetSize(); i++) {
+		auto node = this->l_memoria_principal->get(i);
 		
 		if (node->conteudo == NULL && !inSequencia) {
 			inSequencia = true;
@@ -102,8 +67,8 @@ void QuickFit::OrganizaListasEspacos() {
 		else if (node->conteudo != NULL && inSequencia) {
 			inSequencia = false;
 
-			for (int i = this->tamanhos.size(); i > 0; i--) {
-				if (this->tamanhos[i] == i) {
+			for (int i = this->tamanhos.size() - 1; i != 0; i--) {
+				if (this->tamanhos[i] == sequenciaAtual) {
 					EspacoMemoria* espacoMemoria = new EspacoMemoria(((EspacoMemoria*)node->conteudo)->node, ((EspacoMemoria*)node->conteudo)->sequencia);
 					this->listasEspaco[this->tamanhos[i]]->Inserir(espacoMemoria);
 				}

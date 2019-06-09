@@ -45,9 +45,4 @@ private:
 	BestFit* bestFit;
 	WorstFit* worstFit;
 	QuickFit* quickFit;
-
-	/*std::vector<Operacao> operacoesFirstFit;
-	std::vector<Operacao> operacoesBestFit;
-	std::vector<Operacao> operacoesWorstFit;
-	std::vector<Operacao> operacoesQuickFit;*/
 };

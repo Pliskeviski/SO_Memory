@@ -8,7 +8,7 @@
 class QuickFit : public Algoritmo {
 public:
 	QuickFit();
-	void Print() override;
+	//void Print() override;
 	void OrganizaListas() override;
 protected:
 	virtual void* InsereProcesso(Processo* p, LISTA lista) override;

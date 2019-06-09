@@ -7,8 +7,9 @@
 #include <iomanip>
 
 Algoritmo::Algoritmo(std::string nome) : nome(nome) {
-	this->l_livres_ocupados = new Lista<Processo>();
+	this->l_memoria_principal = new Lista<Processo>();
 
+	this->l_livres_ocupados = new Lista<EspacoMemoria>();
 	this->l_livres = new Lista<EspacoMemoria>();
 	this->l_livres_ordenada = new Lista<EspacoMemoria>();
 	this->l_ocupados = new Lista<EspacoMemoria>();
@@ -20,7 +21,7 @@ int Algoritmo::Init(const char* filePath) {
 
 	for (Processo p : this->processos_arquivo) {
 		for(int i = 0; i < p.EspacoMemoria; i++)
-			this->Insere(&p, LISTA::PRINCIPAL, true);
+			this->Insere(&p, LISTA::NOLISTA, true); // Inicia os processos na memoria
 	}
 	
 	return 0;
@@ -31,9 +32,9 @@ Node* Algoritmo::InserePosicao(Processo* p, Node* node) {
 	for (int i = 0; i < p->EspacoMemoria; i++) {
 		Node* inserido = NULL;
 		if (primeiro == NULL)
-			inserido = primeiro = this->l_livres_ocupados->InserirConteudo(p, node);
+			inserido = primeiro = this->l_memoria_principal->InserirConteudo(p, node);
 		else
-			inserido = this->l_livres_ocupados->InserirConteudo(p, node);
+			inserido = this->l_memoria_principal->InserirConteudo(p, node);
 		
 		if (inserido == NULL) return NULL;
 
@@ -45,7 +46,7 @@ Node* Algoritmo::InserePosicao(Processo* p, Node* node) {
 
 bool Algoritmo::RemoveProcesso(const char* nome) {
 	Processo p(nome);
-	return this->l_livres_ocupados->RemoverConteudo(p);
+	return this->l_memoria_principal->RemoverConteudo(p);
 }
 
 int Algoritmo::CarregaProcessosArquivo(const char* filePath, int max_itens) {
@@ -68,9 +69,60 @@ int Algoritmo::CarregaProcessosArquivo(const char* filePath, int max_itens) {
 }
 
 void Algoritmo::OrganizaListas() {
+	this->OrganizaLivresOcupadas();
 	this->OrganizaOcupados();
 	this->OrganizaLivres();
 	this->OrganizaOcupadasOrdem();
+}
+
+void Algoritmo::OrganizaLivresOcupadas() {
+	this->l_livres_ocupados->Reset();
+	Node* inicio = NULL;
+	int sequencia = 0;
+
+	std::string ultimoProcesso = ""; 
+
+	for (int i = 0; i < this->l_memoria_principal->GetSize(); i++) {
+		auto node = this->l_memoria_principal->get(i);
+		if (node == NULL) continue;
+		
+		std::string nomeProcesso = (node->conteudo == NULL ? "NULL" : ((Processo*)node->conteudo)->Nome);
+
+		if (ultimoProcesso == "")
+			ultimoProcesso = nomeProcesso;
+
+		if (inicio == NULL && node->conteudo == NULL && nomeProcesso == "NULL") { // Sequencia de nulos
+			sequencia = 1;
+			EspacoMemoria* espacoMemoria = new EspacoMemoria(node, sequencia++);
+			inicio = this->l_livres_ocupados->Inserir(espacoMemoria);
+		}
+		else if (node->conteudo == NULL && nomeProcesso == "NULL") {
+			((EspacoMemoria*)inicio->conteudo)->sequencia++;
+		}
+		else if(node->conteudo != NULL && nomeProcesso == "NULL") {
+			inicio = NULL;
+			sequencia = 0;
+		}
+
+		if (inicio == NULL && node->conteudo != NULL && ultimoProcesso == nomeProcesso) { // Sequencia de processos
+			EspacoMemoria* espacoMemoria = new EspacoMemoria(node, sequencia++);
+			inicio = this->l_livres_ocupados->Inserir(espacoMemoria);
+		}
+		else if (node->conteudo != NULL && ultimoProcesso == nomeProcesso) {
+			((EspacoMemoria*)inicio->conteudo)->sequencia++;
+		}
+		else if (node->conteudo == NULL && ultimoProcesso != nomeProcesso) {
+			inicio = NULL;
+			sequencia = 0;
+		}
+
+		if (ultimoProcesso != nomeProcesso) {
+			sequencia = 0;
+			inicio = NULL;
+		}
+
+		ultimoProcesso = nomeProcesso;
+	}
 }
 
 void Algoritmo::OrganizaOcupados() {
@@ -78,8 +130,8 @@ void Algoritmo::OrganizaOcupados() {
 	Node* inicio = NULL;
 	int sequencia = 0;
 
-	for (int i = 0; i < this->l_livres_ocupados->GetSize(); i++) {
-		auto node = this->l_livres_ocupados->get(i);
+	for (int i = 0; i < this->l_memoria_principal->GetSize(); i++) {
+		auto node = this->l_memoria_principal->get(i);
 		if (node == NULL) continue;
 
 		if (inicio == NULL && node->conteudo != NULL) {
@@ -105,11 +157,12 @@ void Algoritmo::OrganizaLivres() {
 	Node* inicioOrd = NULL;
 	int sequencia = 0;
 
-	for (int i = 0; i < this->l_livres_ocupados->GetSize(); i++) {
-		auto node = this->l_livres_ocupados->get(i);
+	for (int i = 0; i < this->l_memoria_principal->GetSize(); i++) {
+		auto node = this->l_memoria_principal->get(i);
 		if (node == NULL) continue;
 
 		if (inicio == NULL && node->conteudo == NULL) {
+			sequencia = 1;
 			inicio = this->l_livres->Inserir(new EspacoMemoria(node, sequencia));
 			inicioOrd = this->l_livres_ordenada->Inserir(new EspacoMemoria(node, sequencia));
 			sequencia++;
@@ -154,7 +207,7 @@ double Algoritmo::Insere(Processo* p, LISTA lista, bool dinamica) {
 	void* retorno = NULL;
 
 	if(dinamica)
-		retorno = (void*)this->l_livres_ocupados->Inserir(processo); // Processo vai ser inserido no fim da lista
+		retorno = (void*)this->l_memoria_principal->Inserir(processo); // Processo vai ser inserido no fim da lista
 	else
 		retorno = this->InsereProcesso(processo, lista);
 
@@ -192,7 +245,7 @@ int Algoritmo::Remove() {
 	}
 	else {
 		EspacoMemoria* espaco = (EspacoMemoria*)node->conteudo;
-		if (this->l_livres_ocupados->RemoveNode((Node*)espaco->node)) {
+		if (this->l_memoria_principal->RemoveNode((Node*)espaco->node)) {
 			return 0;
 		}
 		this->OrganizaListas();
@@ -202,30 +255,66 @@ int Algoritmo::Remove() {
 }
 
 void Algoritmo::Print() {
+	std::cout << std::setw(5) << std::right << "Memoria " << this->getName() << std::endl;
+
 	// Principal
 	std::cout << std::setw(20) << std::right << "\nMemoria principal" << std::endl;
-	std::cout << std::setw(5) << std::right << "Index" << " - " << "Nome" << std::endl;
-	this->l_livres_ocupados->Print();
-	
+	std::cout << std::setw(7) << std::right << "Posicao" << " - " << "Tamanho" << std::endl;
+	this->l_memoria_principal->Print();
+
+	// Livres Ocupadas
+	std::cout << std::setw(20) << std::right << "\nLivres Ocupadas" << std::endl;
+	std::cout << std::setw(5) << std::right << "Posicao" << " - " << "Nome" << " - " << "Tamanho" << std::endl;
+	for (int i = 0; i < this->l_livres_ocupados->GetSize(); i++) {
+		EspacoMemoria* conteudo = (EspacoMemoria*)this->l_livres_ocupados->get(i)->conteudo;
+		auto node = conteudo->node;
+		std::string nome = ((Processo*)node->conteudo == NULL ? "NULL" : ((Processo*)node->conteudo)->Nome);
+
+		int posicao = node->index - 1;
+		if (posicao < 0) posicao = 0;
+
+		std::cout << std::setw(7) << std::right << posicao << " - " << std::setw(4) << nome << " - " << (conteudo->sequencia + 1) << std::endl;
+	}
+
 	// Ocupados
 	std::cout << std::setw(20) << std::right << "\nOcupados" << std::endl;
-	std::cout << std::setw(5) << std::right << "Index" << " - " << "Sequencia" << std::endl;
-	this->l_ocupados->Print();
+	std::cout << std::setw(5) << std::right << "Posicao" << " - " << "Tamanho" << std::endl;
+	for (int i = 0; i < this->l_ocupados->GetSize(); i++) {
+		EspacoMemoria* conteudo = (EspacoMemoria*)this->l_ocupados->get(i)->conteudo;
+		auto node = conteudo->node;
+
+		std::cout << std::setw(7) << std::right << node->index << " - " << conteudo->sequencia << std::endl;
+	}
 
 	// Ocupados Ordenados
 	std::cout << std::setw(20) << std::right << "\nOcupados Ordenados" << std::endl;
-	std::cout << std::setw(5) << std::right << "Index" << " - " << "Sequencia" << std::endl;
-	this->l_ocupados_ordenado->Print();
+	std::cout << std::setw(5) << std::right << "Posicao" << " - " << "Tamanho" << std::endl;
+	for (int i = 0; i < this->l_ocupados_ordenado->GetSize(); i++) {
+		EspacoMemoria* conteudo = (EspacoMemoria*)this->l_ocupados_ordenado->get(i)->conteudo;
+		auto node = conteudo->node;
+
+		std::cout << std::setw(7) << std::right << node->index << " - " << conteudo->sequencia << std::endl;
+	}
 
 	// Livres
 	std::cout << std::setw(20) << std::right << "\nLivres" << std::endl;
-	std::cout << std::setw(5) << std::right << "Index" << " - " << "Sequencia" << std::endl;
-	this->l_livres->Print();
+	std::cout << std::setw(5) << std::right << "Posicao" << " - " << "Tamanho" << std::endl;
+	for (int i = 0; i < this->l_livres->GetSize(); i++) {
+		EspacoMemoria* conteudo = (EspacoMemoria*)this->l_livres->get(i)->conteudo;
+		auto node = conteudo->node;
 
-	// Livres Ordenadas
+		std::cout << std::setw(7) << std::right << node->index << " - " << conteudo->sequencia << std::endl;
+	}
+
+	// Livres
 	std::cout << std::setw(20) << std::right << "\nLivres Ordenadas" << std::endl;
-	std::cout << std::setw(5) << std::right << "Index" << " - " << "Sequencia" << std::endl;
-	this->l_livres_ordenada->Print();
+	std::cout << std::setw(5) << std::right << "Posicao" << " - " << "Tamanho" << std::endl;
+	for (int i = 0; i < this->l_livres_ordenada->GetSize(); i++) {
+		EspacoMemoria* conteudo = (EspacoMemoria*)this->l_livres_ordenada->get(i)->conteudo;
+		auto node = conteudo->node;
+
+		std::cout << std::setw(7) << std::right << node->index << " - " << conteudo->sequencia << std::endl;
+	}
 }
 
 void Algoritmo::AdicionaOperacao(Operacao op) {
@@ -241,7 +330,7 @@ std::string& Algoritmo::getName() {
 }
 
 Algoritmo::~Algoritmo() {
-	delete this->l_livres_ocupados;
+	delete this->l_memoria_principal;
 	delete this->l_livres_ordenada;
 	delete this->l_livres;
 	delete this->l_ocupados;

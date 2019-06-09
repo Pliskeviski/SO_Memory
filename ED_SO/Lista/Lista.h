@@ -185,6 +185,7 @@ inline int Lista<T>::GetSize() {
 template<typename T>
 inline Node* Lista<T>::get(int index) {
 	auto node = this->cabeca;
+
 	for (int i = 0; i <= index; i++) {
 		if (node == NULL) break;
 

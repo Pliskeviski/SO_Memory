@@ -5,7 +5,6 @@
 class BestFit : public Algoritmo {
 public:
 	BestFit();
-	void Print() override;
 protected:
 	void* InsereProcesso(Processo* p, LISTA lista) override;
 private:

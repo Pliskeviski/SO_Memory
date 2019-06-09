@@ -5,7 +5,7 @@
 #include "Helper/MenuMemoria.h"
 
 int main(int argc, char *argv[]) {
-	GerarArquivo::NovoArquivo("processos.txt", 10); 
+	//GerarArquivo::NovoArquivo("processos.txt", 10); 
 	
 	MenuMemoria menu("processos.txt");
 

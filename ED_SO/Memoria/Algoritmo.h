@@ -6,10 +6,10 @@
 #include "EspacoMemoria.h"
 
 enum LISTA {
-	NOLISTA = -1,
-	PRINCIPAL = 0,
-	LIVRE = 1,
-	LIVREORDENADA = 2
+	NOLISTA = 0,
+	PRINCIPAL = 1,
+	LIVRE = 2,
+	LIVREORDENADA = 3
 };
 
 struct Operacao {
@@ -60,14 +60,16 @@ protected:
 	*/
 	virtual bool RemoveProcesso(const char* nome);
 
-	Lista<Processo>* l_livres_ocupados; // Memoria principal
+	Lista<Processo>* l_memoria_principal; // Memoria principal
 
+	Lista<EspacoMemoria>* l_livres_ocupados;
 	Lista<EspacoMemoria>* l_livres;
 	Lista<EspacoMemoria>* l_livres_ordenada;
 	Lista<EspacoMemoria>* l_ocupados;
 	Lista<EspacoMemoria>* l_ocupados_ordenado;
 
 	virtual void OrganizaListas();
+	void OrganizaLivresOcupadas();
 	void OrganizaOcupados();
 	void OrganizaLivres();
 	void OrganizaOcupadasOrdem();
