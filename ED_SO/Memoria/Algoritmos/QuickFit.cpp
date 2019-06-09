@@ -20,7 +20,7 @@ void QuickFit::OrganizaListas() {
 	this->OrganizaListasEspacos();
 }
 
-void* QuickFit::InsereProcesso(Processo* p, LISTA lista) {
+void* QuickFit::InsereProcesso(Processo* p, LISTA lista, bool somenteProcura) {
 	int melhor = -1;
 	for (int i : this->tamanhos) {
 		if (i > p->EspacoMemoria) {

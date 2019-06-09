@@ -11,10 +11,11 @@
 #include "../Memoria/Algoritmos/QuickFit.h"
 
 struct AdicionaProcesso {
-	AdicionaProcesso(Processo& processo, int algoritmo, LISTA lista) : processo(processo), algoritmo(algoritmo), lista(lista) {}
+	AdicionaProcesso(Processo& processo, int algoritmo, LISTA lista, bool somenteProcura) : processo(processo), algoritmo(algoritmo), lista(lista), somenteProcura(somenteProcura) {}
 	Processo& processo;
 	int algoritmo;
 	LISTA lista;
+	bool somenteProcura;
 };
 
 struct RemoveProcesso {

@@ -8,10 +8,9 @@
 class QuickFit : public Algoritmo {
 public:
 	QuickFit();
-	//void Print() override;
 	void OrganizaListas() override;
 protected:
-	virtual void* InsereProcesso(Processo* p, LISTA lista) override;
+	virtual void* InsereProcesso(Processo* p, LISTA lista, bool somenteProcura) override;
 
 	std::vector<int> tamanhos;
 private: 

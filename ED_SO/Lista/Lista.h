@@ -26,6 +26,10 @@ private:
 	Node* cabeca;
 	Node* ultimo;
 	unsigned int index;
+
+	// Otimizacao na busca
+	unsigned int ultimo_index;
+	Node* ultimo_node;
 };
 
 template<typename T>
@@ -186,11 +190,24 @@ template<typename T>
 inline Node* Lista<T>::get(int index) {
 	auto node = this->cabeca;
 
+	if (index == this->ultimo_index + 1) {
+		this->ultimo_index++;
+		this->ultimo_node = this->ultimo_node->proximo;
+		return this->ultimo_node;
+	}
+	else {
+		this->ultimo_index = 0;
+		this->ultimo_node = NULL;
+	}
+
 	for (int i = 0; i <= index; i++) {
 		if (node == NULL) break;
 
-		if (i == index)
+		if (i == index) {
+			this->ultimo_index = i;
+			this->ultimo_node = node;
 			return node;
+		}
 		
 		node = node->proximo;
 	}

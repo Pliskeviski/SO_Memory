@@ -35,7 +35,7 @@ public:
 		dinamica = false
 			trabalha com os nós já existentes na lista
 	*/
-	double Insere(Processo* p, LISTA lista, bool dinamica = false);
+	double Insere(Processo* p, LISTA lista, bool somenteProcura = false);
 	double RemoveNome(const char* nome);
 	int Remove();
 
@@ -53,7 +53,7 @@ protected:
 	/*
 		Insere um novo processo na "memoria"
 	*/
-	virtual void* InsereProcesso(Processo* p, LISTA lista) = 0;
+	virtual void* InsereProcesso(Processo* p, LISTA lista, bool somenteProcura) = 0;
 
 	/*
 		Remove um processo da "memoria"

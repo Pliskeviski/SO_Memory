@@ -38,6 +38,7 @@ void MenuMemoria::NovoProcesso(void* p) {
 	std::string dinamica;
 	unsigned int lista;
 	Algoritmo* algoritmo = NULL;
+	std::string somente_procura;
 
 	if (p == NULL) {
 		std::cin.get();
@@ -55,6 +56,9 @@ void MenuMemoria::NovoProcesso(void* p) {
 		std::cout << "Memoria dinamica? S|N \n";
 		std::getline(std::cin, dinamica);
 		
+		std::cout << "Somente Procura? S|N\n";
+		std::getline(std::cin, somente_procura);
+
 		std::cout << "Digite a lista a ser utilizada: \n1-Lista simples\n2-Lista livre\n3-Lista livre ordenada\n";
 		std::cin >> lista;
 	}
@@ -65,11 +69,12 @@ void MenuMemoria::NovoProcesso(void* p) {
 		dinamica = ap->processo.Alocacao == true ? "S" : "N";
 		algoritmo = this->RecuperaAlgoritmo(ap->algoritmo);
 		lista = ap->lista;
+		somente_procura = ap->somenteProcura == true ? "S" : "N";
 	}
 
 	Processo processo = Processo(nome.c_str(), (dinamica == "S"), tamanho);
 
-	double tempo = algoritmo->Insere(&processo, (LISTA)lista);
+	double tempo = algoritmo->Insere(&processo, (LISTA)lista, (somente_procura == "S"));
 	
 	if (tempo > 0) {
 		algoritmo->AdicionaOperacao(Operacao(1, tempo, (LISTA)lista));
@@ -186,7 +191,7 @@ void MenuMemoria::ExecutaArquivo(void* p) {
 		std::cout << "\n";
 		std::ifstream arquivo(script);
 
-		int x, tamanho, alocacao, algoritmo, lista;
+		int x, tamanho, alocacao, algoritmo, lista, somente_procura;
 		char nome[12];
 
 		Processo* p = NULL;
@@ -196,9 +201,9 @@ void MenuMemoria::ExecutaArquivo(void* p) {
 		for (std::string line; std::getline(arquivo, line); ) {
 			switch (line[0]) {
 			case '0':
-				sscanf(line.c_str(), "%d %s %d %d %d %d", &x, nome, &tamanho, &alocacao, &algoritmo, &lista);
+				sscanf(line.c_str(), "%d %s %d %d %d %d %d", &x, nome, &tamanho, &alocacao, &algoritmo, &lista, &somente_procura);
 				p = new Processo(nome, alocacao, tamanho);
-				ap = new AdicionaProcesso(*p, algoritmo, (LISTA)lista);
+				ap = new AdicionaProcesso(*p, algoritmo, (LISTA)lista, somente_procura);
 				this->NovoProcesso((void*)ap);
 				delete p;
 				delete ap;
@@ -268,7 +273,7 @@ Algoritmo* MenuMemoria::RecuperaAlgoritmo(int alg) {
 		std::cin >> alg;
 
 		if (alg < 0 || alg > 4) {
-			std::cout << "Algoritmo invalid\n";
+			std::cout << "Algoritmo invalido\n";
 		}
 	}
 

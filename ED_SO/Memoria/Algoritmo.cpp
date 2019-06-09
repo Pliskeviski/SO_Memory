@@ -21,7 +21,7 @@ int Algoritmo::Init(const char* filePath) {
 
 	for (Processo p : this->processos_arquivo) {
 		for(int i = 0; i < p.EspacoMemoria; i++)
-			this->Insere(&p, LISTA::NOLISTA, true); // Inicia os processos na memoria
+			this->Insere(&p, LISTA::NOLISTA); // Inicia os processos na memoria
 	}
 	
 	return 0;
@@ -80,47 +80,48 @@ void Algoritmo::OrganizaLivresOcupadas() {
 	Node* inicio = NULL;
 	int sequencia = 0;
 
-	std::string ultimoProcesso = ""; 
+	std::string ultimoProcesso = "";
 
 	for (int i = 0; i < this->l_memoria_principal->GetSize(); i++) {
 		auto node = this->l_memoria_principal->get(i);
 		if (node == NULL) continue;
-		
+
 		std::string nomeProcesso = (node->conteudo == NULL ? "NULL" : ((Processo*)node->conteudo)->Nome);
-
-		if (ultimoProcesso == "")
-			ultimoProcesso = nomeProcesso;
-
-		if (inicio == NULL && node->conteudo == NULL && nomeProcesso == "NULL") { // Sequencia de nulos
-			sequencia = 1;
-			EspacoMemoria* espacoMemoria = new EspacoMemoria(node, sequencia++);
-			inicio = this->l_livres_ocupados->Inserir(espacoMemoria);
-		}
-		else if (node->conteudo == NULL && nomeProcesso == "NULL") {
-			((EspacoMemoria*)inicio->conteudo)->sequencia++;
-		}
-		else if(node->conteudo != NULL && nomeProcesso == "NULL") {
-			inicio = NULL;
-			sequencia = 0;
-		}
-
-		if (inicio == NULL && node->conteudo != NULL && ultimoProcesso == nomeProcesso) { // Sequencia de processos
-			EspacoMemoria* espacoMemoria = new EspacoMemoria(node, sequencia++);
-			inicio = this->l_livres_ocupados->Inserir(espacoMemoria);
-		}
-		else if (node->conteudo != NULL && ultimoProcesso == nomeProcesso) {
-			((EspacoMemoria*)inicio->conteudo)->sequencia++;
-		}
-		else if (node->conteudo == NULL && ultimoProcesso != nomeProcesso) {
-			inicio = NULL;
-			sequencia = 0;
-		}
 
 		if (ultimoProcesso != nomeProcesso) {
 			sequencia = 0;
 			inicio = NULL;
 		}
 
+		if (node->conteudo == NULL) {
+			if (inicio == NULL && node->conteudo == NULL && nomeProcesso == "NULL") { // Sequencia de nulos
+				EspacoMemoria* espacoMemoria = new EspacoMemoria(node, sequencia++);
+				inicio = this->l_livres_ocupados->Inserir(espacoMemoria);
+			}
+			else if (node->conteudo == NULL && nomeProcesso == "NULL") {
+				((EspacoMemoria*)inicio->conteudo)->sequencia = sequencia++;
+			}
+			else if (node->conteudo != NULL && nomeProcesso == "NULL") {
+				inicio = NULL;
+				sequencia = 0;
+			}
+		}
+
+		if (node->conteudo != NULL) {
+			if (inicio == NULL && node->conteudo != NULL && ultimoProcesso != nomeProcesso) { // Sequencia de processos
+				EspacoMemoria* espacoMemoria = new EspacoMemoria(node, sequencia++);
+				inicio = this->l_livres_ocupados->Inserir(espacoMemoria);
+			}
+			else if (node->conteudo != NULL && ultimoProcesso == nomeProcesso) {
+				((EspacoMemoria*)inicio->conteudo)->sequencia = sequencia++;
+			}
+			else if (node->conteudo == NULL && ultimoProcesso != nomeProcesso) {
+				inicio = NULL;
+				sequencia = 0;
+			}
+
+		}
+		
 		ultimoProcesso = nomeProcesso;
 	}
 }
@@ -162,7 +163,6 @@ void Algoritmo::OrganizaLivres() {
 		if (node == NULL) continue;
 
 		if (inicio == NULL && node->conteudo == NULL) {
-			sequencia = 1;
 			inicio = this->l_livres->Inserir(new EspacoMemoria(node, sequencia));
 			inicioOrd = this->l_livres_ordenada->Inserir(new EspacoMemoria(node, sequencia));
 			sequencia++;
@@ -196,7 +196,7 @@ void Algoritmo::OrganizaOcupadasOrdem() {
 	BubbleSort::bubbleSort(this->l_ocupados_ordenado);
 }
 
-double Algoritmo::Insere(Processo* p, LISTA lista, bool dinamica) {
+double Algoritmo::Insere(Processo* p, LISTA lista, bool somenteProcura) {
 	Processo* processo = NULL;
 	
 	if(p != NULL)
@@ -206,15 +206,13 @@ double Algoritmo::Insere(Processo* p, LISTA lista, bool dinamica) {
 
 	void* retorno = NULL;
 
-	if(dinamica)
+	if(lista == LISTA::NOLISTA)
 		retorno = (void*)this->l_memoria_principal->Inserir(processo); // Processo vai ser inserido no fim da lista
 	else
-		retorno = this->InsereProcesso(processo, lista);
+		retorno = this->InsereProcesso(processo, lista, somenteProcura);
 
-	if (retorno == NULL)
-		return -1;
-
-	this->OrganizaListas();
+	if(retorno != NULL)
+		this->OrganizaListas();
 
 	auto t = tempo.Fim();
 

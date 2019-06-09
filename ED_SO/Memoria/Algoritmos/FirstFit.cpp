@@ -5,7 +5,7 @@
 FirstFit::FirstFit() : Algoritmo("FirstFit") {
 }
 
-void* FirstFit::InsereProcesso(Processo* p, LISTA lista) {
+void* FirstFit::InsereProcesso(Processo* p, LISTA lista, bool somenteProcura) {
 
 	Node* posicaoInsercao = NULL;
 
@@ -15,7 +15,6 @@ void* FirstFit::InsereProcesso(Processo* p, LISTA lista) {
 			EspacoMemoria* espaco = (EspacoMemoria*)node->conteudo;
 
 			if (espaco->node->conteudo == NULL && espaco->sequencia >= p->EspacoMemoria) {
-				std::cout << "Inserindo processo " << p->Nome << std::endl;
 				posicaoInsercao = espaco->node;
 				break;
 			}
@@ -27,7 +26,6 @@ void* FirstFit::InsereProcesso(Processo* p, LISTA lista) {
 			EspacoMemoria* espaco = (EspacoMemoria*)node->conteudo;
 
 			if (espaco->node->conteudo == NULL && espaco->sequencia >= p->EspacoMemoria) {
-				std::cout << "Inserindo processo " << p->Nome << std::endl;
 				posicaoInsercao = espaco->node;
 				break;
 			}
@@ -39,17 +37,22 @@ void* FirstFit::InsereProcesso(Processo* p, LISTA lista) {
 			EspacoMemoria* espaco = (EspacoMemoria*)node->conteudo;
 
 			if (espaco->node->conteudo == NULL && espaco->sequencia >= p->EspacoMemoria) {
-				std::cout << "Inserindo processo " << p->Nome << std::endl;
 				posicaoInsercao = espaco->node;
 				break;
 			}
 		}
 	}
 	
-	if (posicaoInsercao == NULL) {
-		std::cout << "Nenhuma posicao livre foi encontrada\n";
-		return NULL;
+	if (posicaoInsercao != NULL) {
+		std::cout << "Inserindo processo " << p->Nome << std::endl;
+		
+		if (somenteProcura)
+			return NULL;
+		else
+			return this->InserePosicao(p, posicaoInsercao);
 	}
 
-	return this->InserePosicao(p, posicaoInsercao);
+	std::cout << "Nenhuma posicao livre foi encontrada\n";
+	return NULL;
+
 }
