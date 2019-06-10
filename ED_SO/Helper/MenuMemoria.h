@@ -37,6 +37,7 @@ private:
 	void ExpandirMemoria(void* p = NULL);
 	void ReduzirMemoria(void* p = NULL);
 	void ExecutaArquivo(void* p = NULL);
+	void ExportarResultados(void* p = NULL);
 
 	void ImprimeVetorEstatistica(Algoritmo* algoritmo);
 

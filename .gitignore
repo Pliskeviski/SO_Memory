@@ -7,6 +7,8 @@
 *.vcxproj
 *.filters
 
+*.csv
+
 # User-specific files
 *.suo
 *.user
