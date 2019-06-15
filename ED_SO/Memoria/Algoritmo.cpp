@@ -256,9 +256,9 @@ void Algoritmo::Print() {
 	std::cout << std::setw(5) << std::right << "Memoria " << this->getName() << std::endl;
 
 	// Principal
-	std::cout << std::setw(20) << std::right << "\nMemoria principal" << std::endl;
+	/*std::cout << std::setw(20) << std::right << "\nMemoria principal" << std::endl;
 	std::cout << std::setw(7) << std::right << "Posicao" << " - " << "Tamanho" << std::endl;
-	this->l_memoria_principal->Print();
+	this->l_memoria_principal->Print();*/
 
 	// Livres Ocupadas
 	std::cout << std::setw(20) << std::right << "\nLivres Ocupadas" << std::endl;
