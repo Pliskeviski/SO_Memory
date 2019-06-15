@@ -199,7 +199,7 @@ void Algoritmo::OrganizaOcupadasOrdem() {
 double Algoritmo::Insere(Processo* p, LISTA lista, bool somenteProcura) {
 	Processo* processo = NULL;
 	
-	if(p != NULL)
+	if(p != NULL && p->Nome != "--")
 		processo = new Processo(p->Nome.c_str(), p->Alocacao, p->EspacoMemoria);
 
 	Meditor tempo; 
@@ -211,10 +211,10 @@ double Algoritmo::Insere(Processo* p, LISTA lista, bool somenteProcura) {
 	else
 		retorno = this->InsereProcesso(processo, lista, somenteProcura);
 
+	auto t = tempo.Fim();
+
 	if(retorno != NULL)
 		this->OrganizaListas();
-
-	auto t = tempo.Fim();
 
 	return t;
 }
@@ -268,10 +268,7 @@ void Algoritmo::Print() {
 		auto node = conteudo->node;
 		std::string nome = ((Processo*)node->conteudo == NULL ? "NULL" : ((Processo*)node->conteudo)->Nome);
 
-		int posicao = node->index - 1;
-		if (posicao < 0) posicao = 0;
-
-		std::cout << std::setw(7) << std::right << posicao << " - " << std::setw(4) << nome << " - " << (conteudo->sequencia + 1) << std::endl;
+		std::cout << std::setw(7) << std::right << node->index << " - " << std::setw(4) << nome << " - " << (conteudo->sequencia + 1) << std::endl;
 	}
 
 	// Ocupados
@@ -304,7 +301,7 @@ void Algoritmo::Print() {
 		std::cout << std::setw(7) << std::right << node->index << " - " << conteudo->sequencia << std::endl;
 	}
 
-	// Livres
+	// Livres Ordenadas
 	std::cout << std::setw(20) << std::right << "\nLivres Ordenadas" << std::endl;
 	std::cout << std::setw(5) << std::right << "Posicao" << " - " << "Tamanho" << std::endl;
 	for (int i = 0; i < this->l_livres_ordenada->GetSize(); i++) {

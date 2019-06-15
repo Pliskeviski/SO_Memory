@@ -34,9 +34,13 @@
 
 1 P1 2
 1 P3 2
+1 P5 2
+1 P8 2
 
 1 P1 3
 1 P3 3
+1 P5 3
+1 P8 3
 
 # Insere na lista livres ocupados
 0 AAA 5 1 2 1 1
