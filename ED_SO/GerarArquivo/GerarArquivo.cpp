@@ -15,7 +15,7 @@ void GerarArquivo::NovoArquivo(const char* fileName, unsigned int amount) {
 		if(nul != 1)
 			fprintf(f, "P%d %d %d\n", i, st, nd);
 		else
-			fprintf(f, "-- %d %d\n", i, st, nd);
+			fprintf(f, "-- %d %d\n", st, nd);
 	}
 
 	fclose(f);
