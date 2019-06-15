@@ -25,7 +25,7 @@ void* WorstFit::InsereProcesso(Processo* p, LISTA lista, bool somenteProcura) {
 		int melhorSequencia = -1;
 
 		for (int i = 0; i < this->l_livres->GetSize(); i++) {
-			Node* node = this->l_livres_ocupados->get(i);
+			Node* node = this->l_livres->get(i);
 			EspacoMemoria* espaco = (EspacoMemoria*)node->conteudo;
 
 			if ((espaco->sequencia > melhorSequencia || melhorSequencia == -1) && espaco->sequencia >= p->EspacoMemoria && espaco->node->conteudo == NULL) {
@@ -37,7 +37,7 @@ void* WorstFit::InsereProcesso(Processo* p, LISTA lista, bool somenteProcura) {
 	else if (lista == LISTA::LIVREORDENADA) {
 		int melhorSequencia = -1;
 		for (int i = 0; i < this->l_livres_ordenada->GetSize(); i++) {
-			Node* node = this->l_livres_ocupados->get(i);
+			Node* node = this->l_livres_ordenada->get(i);
 			EspacoMemoria* espaco = (EspacoMemoria*)node->conteudo;
 
 			if ((espaco->sequencia > melhorSequencia || melhorSequencia == -1) && espaco->sequencia >= p->EspacoMemoria && espaco->node->conteudo == NULL) {
