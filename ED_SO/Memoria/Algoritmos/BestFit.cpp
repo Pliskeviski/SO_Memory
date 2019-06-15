@@ -49,7 +49,6 @@ void* BestFit::InsereProcesso(Processo* p, LISTA lista, bool somenteProcura) {
 	}
 
 	if (melhorPos != NULL) {
-		std::cout << "Inserindo processo " << p->Nome << std::endl;
 
 		if (somenteProcura)
 			return NULL;

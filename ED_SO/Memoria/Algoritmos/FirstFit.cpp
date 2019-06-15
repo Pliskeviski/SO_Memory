@@ -44,7 +44,6 @@ void* FirstFit::InsereProcesso(Processo* p, LISTA lista, bool somenteProcura) {
 	}
 	
 	if (posicaoInsercao != NULL) {
-		std::cout << "Inserindo processo " << p->Nome << std::endl;
 		
 		if (somenteProcura)
 			return NULL;

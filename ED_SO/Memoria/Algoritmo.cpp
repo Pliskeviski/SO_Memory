@@ -208,8 +208,10 @@ double Algoritmo::Insere(Processo* p, LISTA lista, bool somenteProcura) {
 
 	if(lista == LISTA::NOLISTA)
 		retorno = (void*)this->l_memoria_principal->Inserir(processo); // Processo vai ser inserido no fim da lista
-	else
+	else {
+		std::cout << "Inserindo processo " << p->Nome << std::endl;
 		retorno = this->InsereProcesso(processo, lista, somenteProcura);
+	}
 
 	auto t = tempo.Fim();
 
