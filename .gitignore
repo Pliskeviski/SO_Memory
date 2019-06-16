@@ -9,6 +9,7 @@
 
 *.vscode
 *.out
+*.csv
 
 # User-specific files
 *.suo

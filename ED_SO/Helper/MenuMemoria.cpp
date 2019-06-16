@@ -29,7 +29,8 @@ MenuMemoria::MenuMemoria(std::string arquivo) {
 	this->addItem("4 - Expandir Memoria", BIND_FN(MenuMemoria::ExpandirMemoria));
 	this->addItem("5 - Reduzir Memoria", BIND_FN(MenuMemoria::ReduzirMemoria));
 	this->addItem("6 - Executa Arquivo", BIND_FN(MenuMemoria::ExecutaArquivo));
-	this->addItem("7 - Sair", BIND_FN(Menu::Sair));
+	this->addItem("7 - Exportar Resultados", BIND_FN(MenuMemoria::ExportarResultados));
+	this->addItem("8 - Sair", BIND_FN(Menu::Sair));
 }
 void MenuMemoria::NovoProcesso(void* p) {
 
@@ -227,6 +228,58 @@ void MenuMemoria::ExecutaArquivo(void* p) {
 		}
 	}
 
+}
+
+void MenuMemoria::ExportarResultados(void* p) {
+	std::string nome_arquivo;
+
+	while (nome_arquivo.size() == 0) {
+		std::cout << "Digite o nome do arquivo (sem extencao) \n";
+		std::cin >> nome_arquivo;
+	}
+
+	nome_arquivo.append(".csv");
+
+	std::ofstream arquivo;
+	arquivo.open(nome_arquivo);
+
+	for (int i = 1; i < 5; i++) {
+		Algoritmo* alg = this->RecuperaAlgoritmo(i);
+
+		for (Operacao op : alg->RecuperaOperacoes()) {
+			std::string lista;
+			std::string operacao;
+
+			switch (op.lista) {
+			case 1:
+				lista = "Livres Ocupados";
+				break;
+			case 2:
+				lista = "Livres";
+				break;
+			case 3:
+				lista = "Livres Ordenados";
+				break;
+			default:
+				lista = "?";
+				break;
+			}
+
+			switch (op.operacao) {
+			case 1:
+				operacao = "Insercao";
+				break;
+			case 2:
+				operacao = "Remocao";
+				break;
+			default:
+				operacao = "?";
+				break;
+			}
+
+			arquivo << alg->getName() << ";" << operacao << ";" << lista << ";" << op.tempo << "\n";
+		}
+	}
 }
 
 void MenuMemoria::ImprimeVetorEstatistica(Algoritmo* algoritmo) {
