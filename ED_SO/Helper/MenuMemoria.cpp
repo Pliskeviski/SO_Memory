@@ -233,6 +233,9 @@ void MenuMemoria::ExecutaArquivo(void* p) {
 void MenuMemoria::ExportarResultados(void* p) {
 	std::string nome_arquivo;
 
+	if(p != NULL) 
+		nome_arquivo = (char*)p;
+	
 	while (nome_arquivo.size() == 0) {
 		std::cout << "Digite o nome do arquivo (sem extencao) \n";
 		std::cin >> nome_arquivo;

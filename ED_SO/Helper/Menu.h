@@ -51,6 +51,10 @@ public:
 		exit(0);
 	}
 
+	ItemMenu& getItemMenu(int index) {
+		return this->itens_menu[index];
+	}
+
 private:
 	std::vector<ItemMenu> itens_menu;
 };
