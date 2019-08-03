@@ -4,10 +4,10 @@
 
 class Processo {
 public:
-	Processo(const char* nome, bool alocacao = false, double espacoMemoria = 0) : Nome((char*)nome), Alocacao(alocacao), EspacoMemoria(espacoMemoria) {}
+	Processo(const char* nome, bool alocacao = false, unsigned int espacoMemoria = 0) : Nome((char*)nome), Alocacao(alocacao), EspacoMemoria(espacoMemoria) {}
 	std::string Nome;
 	bool Alocacao;
-	double EspacoMemoria;
+	unsigned int EspacoMemoria;
 	
 	bool operator==(const Processo& p) const {
 		return this->Nome == p.Nome;
