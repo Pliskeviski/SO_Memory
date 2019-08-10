@@ -29,6 +29,7 @@ struct RemoveProcesso {
 class MenuMemoria : public Menu {
 public:
 	MenuMemoria(std::string arquivo);
+	~MenuMemoria();
 private:
 	void NovoProcesso(void* p = NULL);
 	void RemoverProcesso(void* p = NULL);

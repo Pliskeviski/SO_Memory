@@ -117,6 +117,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="GerarArquivo\GerarArquivo.cpp" />
+    <ClCompile Include="GerarScript\GerarScript.cpp" />
     <ClCompile Include="Helper\MenuMemoria.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Memoria\Algoritmo.cpp" />
@@ -128,6 +129,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GerarArquivo\GerarArquivo.h" />
+    <ClInclude Include="GerarScript\GerarScript.h" />
     <ClInclude Include="Helper\Menu.h" />
     <ClInclude Include="Helper\MenuMemoria.h" />
     <ClInclude Include="Memoria\Algoritmos\BestFit.h" />

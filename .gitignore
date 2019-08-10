@@ -4,6 +4,12 @@
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
 
+<<<<<<< HEAD
+=======
+*.vscode
+*.out
+*.csv
+>>>>>>> f8b3bddb3dd80071ed6cf74e2d05d512803993af
 
 # User-specific files
 *.suo

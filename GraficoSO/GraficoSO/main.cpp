@@ -25,7 +25,7 @@ std::vector<std::vector<int>> Tempos;
 
 int melhorTempo = -1;
 int piorTempo = 0;
-int width = 200;
+int width = 300;
 int height = 500;
 int maior = 0;
 
@@ -105,8 +105,9 @@ std::vector<std::vector<unsigned int>> LoadMemory() {
 		std::string nome_arquivo = "./resultados/arquivo";
 		nome_arquivo.append(std::to_string(i));
 
-
 		std::ifstream memoria(nome_arquivo);
+
+		if (!memoria.is_open()) break;
 
 		int tamanho;
 		int dummy;
@@ -319,6 +320,7 @@ int LoadResults() {
 		nome_arquivo.append(".csv");
 
 		std::ifstream memoria(nome_arquivo);
+		if (!memoria.is_open()) break;
 
 		char string[100];
 
@@ -404,7 +406,7 @@ int main() {
 				double interp = (double)((-Interpolate((double)(piorTempo / 100), (double)(melhorTempo / 100), (double)(Tempos[j][g] / 100))) / 100);
 				Cor c = Interpolate(green, red, interp);
 				
-				paintCircle(buf, pos, 20 + (g * 20), c);
+				paintCircle(buf, pos - 30, 20 + (g * 20), c);
 			}
 		}
 		

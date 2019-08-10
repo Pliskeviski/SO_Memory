@@ -42,6 +42,9 @@
     <ClCompile Include="Memoria\Algoritmos\QuickFit.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GerarScript\GerarScript.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GerarArquivo\GerarArquivo.h">
@@ -78,6 +81,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Memoria\Algoritmos\QuickFit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GerarScript\GerarScript.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

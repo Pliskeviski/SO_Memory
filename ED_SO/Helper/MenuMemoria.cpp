@@ -3,6 +3,9 @@
 #include <iomanip>
 #include <fstream>
 
+#include <chrono>
+#include <thread>
+
 void limpar() {
 #ifdef __linux__ 
 	system("clear");
@@ -32,6 +35,14 @@ MenuMemoria::MenuMemoria(std::string arquivo) {
 	this->addItem("7 - Exportar Resultados", BIND_FN(MenuMemoria::ExportarResultados));
 	this->addItem("8 - Sair", BIND_FN(Menu::Sair));
 }
+
+MenuMemoria::~MenuMemoria() {
+	delete this->firstFit;
+	delete this->bestFit;
+	delete this->worstFit;
+	delete this->quickFit;
+}
+
 void MenuMemoria::NovoProcesso(void* p) {
 
 	std::string nome;
@@ -186,7 +197,7 @@ void MenuMemoria::ReduzirMemoria(void* p) {
 void MenuMemoria::ExecutaArquivo(void* p) {
 	// Carrega comandos de um arquivo e executa todos
 
-	const char* script = "script.so";
+	const char* script = "script_ff.so";
 
 	if (script != NULL) {
 		std::cout << "\n";
@@ -200,6 +211,8 @@ void MenuMemoria::ExecutaArquivo(void* p) {
 		RemoveProcesso* rp = NULL;
 
 		for (std::string line; std::getline(arquivo, line); ) {
+			std::chrono::milliseconds dura(200);
+			std::this_thread::sleep_for(dura);
 			switch (line[0]) {
 			case '0':
 				sscanf(line.c_str(), "%d %s %d %d %d %d %d", &x, nome, &tamanho, &alocacao, &algoritmo, &lista, &somente_procura);
@@ -233,6 +246,9 @@ void MenuMemoria::ExecutaArquivo(void* p) {
 void MenuMemoria::ExportarResultados(void* p) {
 	std::string nome_arquivo;
 
+	if(p != NULL) 
+		nome_arquivo = (char*)p;
+	
 	while (nome_arquivo.size() == 0) {
 		std::cout << "Digite o nome do arquivo (sem extencao) \n";
 		std::cin >> nome_arquivo;
@@ -277,7 +293,9 @@ void MenuMemoria::ExportarResultados(void* p) {
 				break;
 			}
 
-			arquivo << alg->getName() << "," << operacao << "," << lista << "," << op.tempo << "\n";
+			long tempoFix = op.tempo;// >= 10 ? 10 : op.tempo;
+
+			arquivo << alg->getName() << ";" << operacao << ";" << lista << ";" << tempoFix << "\n";
 		}
 	}
 }
