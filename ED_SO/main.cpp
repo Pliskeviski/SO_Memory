@@ -43,10 +43,10 @@ int main(int argc, char *argv[]) {
 		GerarScript::NovoScript(script, tamanho_script, 50);
 
 	
-	MenuMemoria menu("processos.txt");
+	MenuMemoria* menu;
 	
 	if(executa_testes) {
-		int quantidade_testes = 200;
+		int quantidade_testes = 100;
 		int quantidade_processos = 200;
 
 		for(int i = 1; i <= quantidade_testes; i++) {
@@ -54,15 +54,19 @@ int main(int argc, char *argv[]) {
 			std::string arquivo_texto = "./resultados/arquivo" + std::to_string(i);
 			arquivo_texto.append(".txt");
 
+
 			GerarArquivo::NovoArquivo(nome_arquivo.c_str(), quantidade_processos);
-			menu.getItemMenu(6).funcao((void*)NULL);			
-			menu.getItemMenu(7).funcao((void*)nome_arquivo.c_str());			
+
+			menu = new MenuMemoria(nome_arquivo);
+			menu->getItemMenu(6).funcao((void*)NULL);			
+			menu->getItemMenu(7).funcao((void*)nome_arquivo.c_str());			
+			delete menu;
 		}
 	} else {
-		while (1) menu.LeEvento();
+		menu = new MenuMemoria("processos.txt");
+		while (1) menu->LeEvento();
+		delete menu;
 	}
-
-
 
 	std::cin.get();
 }

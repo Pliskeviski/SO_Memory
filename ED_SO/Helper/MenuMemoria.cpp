@@ -32,6 +32,14 @@ MenuMemoria::MenuMemoria(std::string arquivo) {
 	this->addItem("7 - Exportar Resultados", BIND_FN(MenuMemoria::ExportarResultados));
 	this->addItem("8 - Sair", BIND_FN(Menu::Sair));
 }
+
+MenuMemoria::~MenuMemoria() {
+	delete this->firstFit;
+	delete this->bestFit;
+	delete this->worstFit;
+	delete this->quickFit;
+}
+
 void MenuMemoria::NovoProcesso(void* p) {
 
 	std::string nome;
@@ -280,7 +288,9 @@ void MenuMemoria::ExportarResultados(void* p) {
 				break;
 			}
 
-			arquivo << alg->getName() << ";" << operacao << ";" << lista << ";" << op.tempo << "\n";
+			long tempoFix = op.tempo >= 10 ? 10 : op.tempo;
+
+			arquivo << alg->getName() << ";" << operacao << ";" << lista << ";" << tempoFix << "\n";
 		}
 	}
 }
