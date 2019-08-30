@@ -85,6 +85,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -123,7 +124,6 @@
     <ClCompile Include="Memoria\Algoritmo.cpp" />
     <ClCompile Include="Memoria\Algoritmos\BestFit.cpp" />
     <ClCompile Include="Memoria\Algoritmos\FirstFit.cpp" />
-    <ClCompile Include="Memoria\Algoritmos\QuickFit.cpp" />
     <ClCompile Include="Memoria\Algoritmos\WorstFit.cpp" />
     <ClCompile Include="Memoria\EspacoMemoria.h" />
   </ItemGroup>
@@ -138,7 +138,6 @@
     <ClInclude Include="Lista\Lista.h" />
     <ClInclude Include="Memoria\Algoritmo.h" />
     <ClInclude Include="Memoria\Algoritmos\FirstFit.h" />
-    <ClInclude Include="Memoria\Algoritmos\QuickFit.h" />
     <ClInclude Include="Memoria\Algoritmos\WorstFit.h" />
     <ClInclude Include="Memoria\Processo.h" />
   </ItemGroup>

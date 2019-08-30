@@ -39,9 +39,6 @@
     <ClCompile Include="Helper\MenuMemoria.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Memoria\Algoritmos\QuickFit.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="GerarScript\GerarScript.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -78,9 +75,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Helper\MenuMemoria.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Memoria\Algoritmos\QuickFit.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GerarScript\GerarScript.h">

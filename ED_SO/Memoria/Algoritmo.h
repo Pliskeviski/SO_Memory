@@ -29,12 +29,6 @@ public:
 	Algoritmo(std::string nome);
 	int Init(const char* filePath);
 
-	/*
-		dinamica = true
-			cria um novo nó
-		dinamica = false
-			trabalha com os nós já existentes na lista
-	*/
 	double Insere(Processo* p, LISTA lista, bool somenteProcura = false);
 	double RemoveNome(const char* nome);
 	int Remove();
@@ -45,6 +39,7 @@ public:
 	std::vector<Operacao>& RecuperaOperacoes();
 
 	std::string& getName();
+	Lista<EspacoMemoria>* RecuperaLivresOcupadas();
 protected:
 	virtual ~Algoritmo();
 	

@@ -257,11 +257,6 @@ int Algoritmo::Remove() {
 void Algoritmo::Print() {
 	std::cout << std::setw(5) << std::right << "Memoria " << this->getName() << std::endl;
 
-	// Principal
-	/*std::cout << std::setw(20) << std::right << "\nMemoria principal" << std::endl;
-	std::cout << std::setw(7) << std::right << "Posicao" << " - " << "Tamanho" << std::endl;
-	this->l_memoria_principal->Print();*/
-
 	// Livres Ocupadas
 	std::cout << std::setw(20) << std::right << "\nLivres Ocupadas" << std::endl;
 	std::cout << std::setw(5) << std::right << "Posicao" << " - " << "Nome" << " - " << "Tamanho" << std::endl;
@@ -324,6 +319,10 @@ std::vector<Operacao>& Algoritmo::RecuperaOperacoes() {
 
 std::string& Algoritmo::getName() {
 	return this->nome;
+}
+
+Lista<EspacoMemoria>* Algoritmo::RecuperaLivresOcupadas() {
+	return this->l_livres_ocupados;
 }
 
 Algoritmo::~Algoritmo() {

@@ -8,7 +8,6 @@
 #include "../Memoria/Algoritmos/FirstFit.h"
 #include "../Memoria/Algoritmos/BestFit.h"
 #include "../Memoria/Algoritmos/WorstFit.h"
-#include "../Memoria/Algoritmos/QuickFit.h"
 
 struct AdicionaProcesso {
 	AdicionaProcesso(Processo& processo, int algoritmo, LISTA lista, bool somenteProcura) : processo(processo), algoritmo(algoritmo), lista(lista), somenteProcura(somenteProcura) {}
@@ -39,13 +38,15 @@ private:
 	void ReduzirMemoria(void* p = NULL);
 	void ExecutaArquivo(void* p = NULL);
 	void ExportarResultados(void* p = NULL);
+	void ExportarMemoria(void* p = NULL);
 
 	void ImprimeVetorEstatistica(Algoritmo* algoritmo);
 
 	Algoritmo* RecuperaAlgoritmo(int alg = -1);
 
-	FirstFit* firstFit;
-	BestFit* bestFit;
-	WorstFit* worstFit;
-	QuickFit* quickFit;
+	std::vector<Algoritmo*> m_Algoritmos;
+
+	//FirstFit* firstFit;
+	//BestFit* bestFit;
+	//WorstFit* worstFit;
 };

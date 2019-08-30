@@ -15,15 +15,12 @@ void limpar() {
 }
 
 MenuMemoria::MenuMemoria(std::string arquivo) {
-	this->firstFit = new FirstFit();
-	this->bestFit = new BestFit();
-	this->worstFit = new WorstFit();
-	this->quickFit = new QuickFit();
+	this->m_Algoritmos.push_back(new FirstFit());
+	this->m_Algoritmos.push_back(new BestFit());
+	this->m_Algoritmos.push_back(new WorstFit());
 
-	this->firstFit->Init(arquivo.c_str());
-	this->bestFit->Init(arquivo.c_str());
-	this->worstFit->Init(arquivo.c_str());
-	this->quickFit->Init(arquivo.c_str());
+	for (auto alg : this->m_Algoritmos)
+		alg->Init(arquivo.c_str());
 
 	this->addItem("0 - Novo Processo", BIND_FN(MenuMemoria::NovoProcesso));
 	this->addItem("1 - Remover Processo", BIND_FN(MenuMemoria::RemoverProcesso));
@@ -33,14 +30,13 @@ MenuMemoria::MenuMemoria(std::string arquivo) {
 	this->addItem("5 - Reduzir Memoria", BIND_FN(MenuMemoria::ReduzirMemoria));
 	this->addItem("6 - Executa Arquivo", BIND_FN(MenuMemoria::ExecutaArquivo));
 	this->addItem("7 - Exportar Resultados", BIND_FN(MenuMemoria::ExportarResultados));
-	this->addItem("8 - Sair", BIND_FN(Menu::Sair));
+	this->addItem("8 - Exportar Memoria", BIND_FN(MenuMemoria::ExportarMemoria));
+	this->addItem("9 - Sair", BIND_FN(Menu::Sair));
 }
 
 MenuMemoria::~MenuMemoria() {
-	delete this->firstFit;
-	delete this->bestFit;
-	delete this->worstFit;
-	delete this->quickFit;
+	for (auto alg : this->m_Algoritmos)
+		delete &alg;
 }
 
 void MenuMemoria::NovoProcesso(void* p) {
@@ -197,7 +193,7 @@ void MenuMemoria::ReduzirMemoria(void* p) {
 void MenuMemoria::ExecutaArquivo(void* p) {
 	// Carrega comandos de um arquivo e executa todos
 
-	const char* script = "script_ff.so";
+	const char* script = "script.so";
 
 	if (script != NULL) {
 		std::cout << "\n";
@@ -211,13 +207,12 @@ void MenuMemoria::ExecutaArquivo(void* p) {
 		RemoveProcesso* rp = NULL;
 
 		for (std::string line; std::getline(arquivo, line); ) {
-			std::chrono::milliseconds dura(200);
-			std::this_thread::sleep_for(dura);
 			switch (line[0]) {
 			case '0':
 				sscanf(line.c_str(), "%d %s %d %d %d %d %d", &x, nome, &tamanho, &alocacao, &algoritmo, &lista, &somente_procura);
 				p = new Processo(nome, alocacao, tamanho);
 				ap = new AdicionaProcesso(*p, algoritmo, (LISTA)lista, somente_procura);
+
 				this->NovoProcesso((void*)ap);
 				delete p;
 				delete ap;
@@ -259,7 +254,7 @@ void MenuMemoria::ExportarResultados(void* p) {
 	std::ofstream arquivo;
 	arquivo.open(nome_arquivo);
 
-	for (int i = 1; i < 5; i++) {
+	for (int i = 1; i < this->m_Algoritmos.size() + 1; i++) {
 		Algoritmo* alg = this->RecuperaAlgoritmo(i);
 
 		for (Operacao op : alg->RecuperaOperacoes()) {
@@ -293,10 +288,31 @@ void MenuMemoria::ExportarResultados(void* p) {
 				break;
 			}
 
-			long tempoFix = op.tempo;// >= 10 ? 10 : op.tempo;
-
-			arquivo << alg->getName() << ";" << operacao << ";" << lista << ";" << tempoFix << "\n";
+			arquivo << alg->getName() << ";" << operacao << ";" << lista << ";" << op.tempo << "\n";
 		}
+	}
+}
+
+void MenuMemoria::ExportarMemoria(void* p) {
+	for (int i = 1; i < this->m_Algoritmos.size(); i++) {
+		Algoritmo* alg = this->RecuperaAlgoritmo(i);
+
+		std::ofstream arquivo;
+		arquivo.open("Resultado\\" + alg->getName() + "_result.csv");
+
+		auto lista = alg->RecuperaLivresOcupadas();
+
+		for (int i = 0; i < lista->GetSize(); i++) {
+			EspacoMemoria* conteudo = (EspacoMemoria*)lista->get(i)->conteudo;
+			auto node = conteudo->node;
+			std::string nome = ((Processo*)node->conteudo == NULL ? "--" : ((Processo*)node->conteudo)->Nome);
+
+			int tam = (conteudo->sequencia + 1);
+			if (nome != "--") tam = 0;
+
+			arquivo << nome << ", " << tam << "\n";
+		}
+
 	}
 }
 
@@ -339,31 +355,34 @@ void MenuMemoria::ImprimeVetorEstatistica(Algoritmo* algoritmo) {
 }
 
 Algoritmo* MenuMemoria::RecuperaAlgoritmo(int alg) {
-	while (alg < 0 || alg > 4) {
-		std::cout << "Digite o algoritmo a ser utilizado: \n1-First Fit\n2-BestFit\n3-WorstFit\n4-QuickFit \n";
-		std::cin >> alg;
+	Algoritmo* alg_ = NULL;
+	
+	if (alg != -1) {
+		alg--;
 
-		if (alg < 0 || alg > 4) {
-			std::cout << "Algoritmo invalido\n";
+		if (!(alg < 0 || alg >= this->m_Algoritmos.size())) {
+			alg_ = this->m_Algoritmos[alg];
 		}
 	}
 
-	switch (alg) {
-	case 1:
-		return this->firstFit;
-		break;
-	case 2:
-		return this->bestFit;
-		break;
-	case 3:
-		return this->worstFit;
-		break;
-	case 4:
-		return this->quickFit;
-		break;
-	default:
-		return NULL;
-		break;
+	while (alg_ == NULL) {
+		std::cout << "Digite o algoritmo a ser utilizado: \n";
+	
+		for (int i = 0; i < this->m_Algoritmos.size(); i++) {
+			std::cout << i + 1 << "-" << this->m_Algoritmos[i]->getName() << "\n";
+		}
+
+		int opcao;
+		std::cin >> opcao;
+		opcao--;
+
+		if (opcao < 0 || opcao >= this->m_Algoritmos.size()) {
+			std::cout << "Opção inválida, tenta novamente.\n";
+			std::cin.get();
+		}
+		else {
+			alg_ = this->m_Algoritmos[opcao];
+		}
 	}
-	return NULL;
+	return alg_;
 }

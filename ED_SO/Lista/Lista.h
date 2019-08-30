@@ -218,6 +218,4 @@ inline Node* Lista<T>::get(int index) {
 
 template<typename T>
 inline Lista<T>::~Lista() { // TODO
-	//while (this->size != 0)
-		//this->Remover((T*)this->cabeca->conteudo);
 }
