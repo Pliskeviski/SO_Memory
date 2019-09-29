@@ -13,7 +13,8 @@ public:
 	void Remover(T item);
 	bool RemoverConteudo(T node);
 	bool RemoveNode(Node* node);
-	
+	Node* RecuperaUltimo();
+
 	void Reset();
 
 	void Print();
@@ -52,6 +53,7 @@ inline Node* Lista<T>::Inserir(T* item) {
 
 	auto novo = new Node(item, this->index++);
 	ultimo->proximo = novo;
+	novo->anterior = ultimo;
 	ultimo = novo;
 	this->size++;
 	return novo;
@@ -63,6 +65,12 @@ inline Node* Lista<T>::InserirConteudo(T* conteudo, Node* node) {
 
 	node->conteudo = conteudo;
 	return node;
+}
+
+
+template<typename T>
+inline Node* Lista<T>::RecuperaUltimo() {
+	return this->ultimo;
 }
 
 template<typename T>
@@ -194,6 +202,11 @@ inline Node* Lista<T>::get(int index) {
 	if (index == this->ultimo_index + 1) {
 		this->ultimo_index++;
 		this->ultimo_node = this->ultimo_node->proximo;
+		return this->ultimo_node;
+	} 
+	else if (index > 0 && index == (this->ultimo_index - 1)) {
+		this->ultimo_index--;
+		this->ultimo_node = this->ultimo_node->anterior;
 		return this->ultimo_node;
 	}
 	else {

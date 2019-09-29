@@ -37,13 +37,15 @@ void* BestFit::InsereProcesso(Processo* p, LISTA lista, bool somenteProcura) {
 	}
 	else if (lista == LISTA::LIVREORDENADA) {
 		int melhorSequencia = -1;
-		for (int i = 0; i < this->l_livres_ordenada->GetSize(); i++) {
+		for (int i = this->l_livres_ordenada->GetSize() - 1; i >= 0; i--) {
 			Node* node = this->l_livres_ordenada->get(i);
 			EspacoMemoria* espaco = (EspacoMemoria*)node->conteudo;
 
-			if (espaco->sequencia < melhorSequencia || melhorSequencia == -1 && espaco->sequencia >= p->EspacoMemoria) {
+			if (espaco->sequencia >= p->EspacoMemoria) {
 				melhorPos = espaco->node;
-				melhorSequencia = espaco->sequencia;
+			}
+			else {
+				break;
 			}
 		}
 	}
@@ -51,7 +53,7 @@ void* BestFit::InsereProcesso(Processo* p, LISTA lista, bool somenteProcura) {
 	if (melhorPos != NULL) {
 
 		if (somenteProcura)
-			return NULL;
+			return (void*)p;
 		else
 			return this->InserePosicao(p, (Node*)melhorPos);
 	}

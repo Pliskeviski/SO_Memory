@@ -19,8 +19,10 @@ MenuMemoria::MenuMemoria(std::string arquivo) {
 	this->m_Algoritmos.push_back(new BestFit());
 	this->m_Algoritmos.push_back(new WorstFit());
 
-	for (auto alg : this->m_Algoritmos)
+	for (auto alg : this->m_Algoritmos) {
 		alg->Init(arquivo.c_str());
+		alg->OrganizaListas();
+	}
 
 	this->addItem("0 - Novo Processo", BIND_FN(MenuMemoria::NovoProcesso));
 	this->addItem("1 - Remover Processo", BIND_FN(MenuMemoria::RemoverProcesso));
@@ -35,8 +37,8 @@ MenuMemoria::MenuMemoria(std::string arquivo) {
 }
 
 MenuMemoria::~MenuMemoria() {
-	for (auto alg : this->m_Algoritmos)
-		delete &alg;
+	//for (auto alg : this->m_Algoritmos)
+	//	delete &alg;
 }
 
 void MenuMemoria::NovoProcesso(void* p) {
@@ -86,7 +88,7 @@ void MenuMemoria::NovoProcesso(void* p) {
 	
 	if (tempo > 0) {
 		algoritmo->AdicionaOperacao(Operacao(1, tempo, (LISTA)lista));
-		std::cout << "Processo inserido em: " << tempo << " microseconds\n\n";
+		//std::cout << "Processo inserido em: " << tempo << " microseconds\n\n";
 	}
 }
 
@@ -211,7 +213,9 @@ void MenuMemoria::ExecutaArquivo(void* p) {
 			case '0':
 				sscanf(line.c_str(), "%d %s %d %d %d %d %d", &x, nome, &tamanho, &alocacao, &algoritmo, &lista, &somente_procura);
 				p = new Processo(nome, alocacao, tamanho);
-				ap = new AdicionaProcesso(*p, algoritmo, (LISTA)lista, somente_procura);
+
+
+				ap = new AdicionaProcesso(*p, algoritmo, (LISTA)lista, (bool)somente_procura);
 
 				this->NovoProcesso((void*)ap);
 				delete p;
@@ -238,67 +242,126 @@ void MenuMemoria::ExecutaArquivo(void* p) {
 
 }
 
+//void MenuMemoria::ExportarResultados(void* p) {
+//	std::string nome_arquivo;
+//
+//	if (p != NULL)
+//		nome_arquivo = (char*)p;
+//
+//	while (nome_arquivo.size() == 0) {
+//		std::cout << "Digite o nome do arquivo (sem extencao) \n";
+//		std::cin >> nome_arquivo;
+//	}
+//
+//	nome_arquivo.append(".csv");
+//
+//	std::ofstream arquivo;
+//	arquivo.open(nome_arquivo);
+//
+//	for (int i = 1; i < this->m_Algoritmos.size() + 1; i++) {
+//		Algoritmo* alg = this->RecuperaAlgoritmo(i);
+//
+//		for (Operacao op : alg->RecuperaOperacoes()) {
+//			std::string lista;
+//			std::string operacao;
+//
+//			switch (op.lista) {
+//			case 1:
+//				lista = "Livres Ocupados";
+//				break;
+//			case 2:
+//				lista = "Livres";
+//				break;
+//			case 3:
+//				lista = "Livres Ordenados";
+//				break;
+//			default:
+//				lista = "?";
+//				break;
+//			}
+//
+//			switch (op.operacao) {
+//			case 1:
+//				operacao = "Insercao";
+//				break;
+//			case 2:
+//				operacao = "Remocao";
+//				break;
+//			default:
+//				operacao = "?";
+//				break;
+//			}
+//
+//			arquivo << alg->getName() << ";" << operacao << ";" << lista << ";" << op.tempo << "\n";
+//		}
+//	}
+//}
+
 void MenuMemoria::ExportarResultados(void* p) {
 	std::string nome_arquivo;
 
-	if(p != NULL) 
+	if (p != NULL)
 		nome_arquivo = (char*)p;
-	
+
 	while (nome_arquivo.size() == 0) {
 		std::cout << "Digite o nome do arquivo (sem extencao) \n";
 		std::cin >> nome_arquivo;
 	}
 
-	nome_arquivo.append(".csv");
-
-	std::ofstream arquivo;
-	arquivo.open(nome_arquivo);
-
 	for (int i = 1; i < this->m_Algoritmos.size() + 1; i++) {
 		Algoritmo* alg = this->RecuperaAlgoritmo(i);
 
-		for (Operacao op : alg->RecuperaOperacoes()) {
-			std::string lista;
-			std::string operacao;
+		for (int j = 1; j < 4; j++) {
+			if (i != 1) continue;
 
-			switch (op.lista) {
+			std::ofstream arquivo;
+			std::string nome_arq = nome_arquivo.c_str();
+
+			std::string lista;
+			std::string lista_param;
+			std::string operacao = "Insercao";
+
+			switch (j) {
 			case 1:
 				lista = "Livres Ocupados";
+				lista_param = "LOC";
 				break;
 			case 2:
 				lista = "Livres";
+				lista_param = "L";
 				break;
 			case 3:
 				lista = "Livres Ordenados";
+				lista_param = "LOR";
 				break;
 			default:
 				lista = "?";
 				break;
 			}
 
-			switch (op.operacao) {
-			case 1:
-				operacao = "Insercao";
-				break;
-			case 2:
-				operacao = "Remocao";
-				break;
-			default:
-				operacao = "?";
-				break;
-			}
+			nome_arq.append("_" + alg->getName() + "_" + lista_param + ".csv");
+			arquivo.open(nome_arq);
 
-			arquivo << alg->getName() << ";" << operacao << ";" << lista << ";" << op.tempo << "\n";
+			for (Operacao op : alg->RecuperaOperacoes()) {
+				if(op.lista == j && op.operacao == 1)
+					arquivo << alg->getName() << "," << operacao << "," << lista << "," << op.tempo << "\n";
+			}
 		}
 	}
 }
 
 void MenuMemoria::ExportarMemoria(void* p) {
-	for (int i = 1; i < this->m_Algoritmos.size(); i++) {
+	std::string nome_arquivo;
+	if (p != NULL)
+		nome_arquivo = (char*)p;
+
+	nome_arquivo = nome_arquivo.substr(nome_arquivo.find_last_of('\\') + 1);
+
+	for (int i = 1; i < this->m_Algoritmos.size() + 1; i++) {
 		Algoritmo* alg = this->RecuperaAlgoritmo(i);
 
 		std::ofstream arquivo;
-		arquivo.open("Resultado\\" + alg->getName() + "_result.csv");
+		arquivo.open("arquivo\\resultados\\" + alg->getName() + "_" + nome_arquivo + "_result.csv");
 
 		auto lista = alg->RecuperaLivresOcupadas();
 

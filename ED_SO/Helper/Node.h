@@ -7,4 +7,5 @@ struct Node {
 	unsigned int index;
 	void* conteudo;
 	Node* proximo;
+	Node* anterior;
 };

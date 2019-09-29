@@ -40,6 +40,7 @@ public:
 
 	std::string& getName();
 	Lista<EspacoMemoria>* RecuperaLivresOcupadas();
+	virtual void OrganizaListas();
 protected:
 	virtual ~Algoritmo();
 	
@@ -63,7 +64,6 @@ protected:
 	Lista<EspacoMemoria>* l_ocupados;
 	Lista<EspacoMemoria>* l_ocupados_ordenado;
 
-	virtual void OrganizaListas();
 	void OrganizaLivresOcupadas();
 	void OrganizaOcupados();
 	void OrganizaLivres();

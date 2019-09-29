@@ -4,7 +4,7 @@
 
 class Processo {
 public:
-	Processo(const char* nome, bool alocacao = false, unsigned int espacoMemoria = 0) : Nome((char*)nome), Alocacao(alocacao), EspacoMemoria(espacoMemoria) {}
+	Processo(const char* nome, bool alocacao = false, unsigned int espacoMemoria = 0) : Nome((char*)nome), Alocacao(alocacao), EspacoMemoria(espacoMemoria), _Inserido(false) {}
 	std::string Nome;
 	bool Alocacao;
 	unsigned int EspacoMemoria;
@@ -17,4 +17,6 @@ public:
 		out << p.Nome;
 		return out;
 	}
+
+	bool _Inserido;
 };

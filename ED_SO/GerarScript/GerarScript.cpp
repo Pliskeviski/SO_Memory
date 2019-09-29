@@ -17,17 +17,17 @@ void GerarScript::NovoScript(const char* fileName, unsigned int qtd, unsigned in
         // } else {
             unsigned int tam = rand() % tam_max + 1;
 
-		    fprintf(f, "0 P%d %d 1 1 1 1\n", nome, tam); // FF - Livres Ocupados
-		    fprintf(f, "0 P%d %d 1 1 2 1\n", nome, tam); // FF - Livres 
-		    fprintf(f, "0 P%d %d 1 1 3 1\n", nome, tam); // FF - Livres Ordenados
+		    fprintf(f, "0 I%d %d 1 1 1 0\n", nome, tam); // FF - Livres Ocupados
+		    //fprintf(f, "0 I%d %d 1 1 2 0\n", nome, tam); // FF - Livres 
+		    //fprintf(f, "0 I%d %d 1 1 3 0\n", nome, tam); // FF - Livres Ordenados
             
-            fprintf(f, "0 P%d %d 1 2 1 1\n", nome, tam); // BF - Livres Ocupados
-		    fprintf(f, "0 P%d %d 1 2 2 1\n", nome, tam); // BF - Livres 
-		    fprintf(f, "0 P%d %d 1 2 3 1\n", nome, tam); // BF - Livres Ordenados
+            fprintf(f, "0 I%d %d 1 2 1 0\n", nome, tam); // BF - Livres Ocupados
+			//fprintf(f, "0 I%d %d 1 2 2 0\n", nome, tam); // BF - Livres 
+			//fprintf(f, "0 I%d %d 1 2 3 0\n", nome, tam); // BF - Livres Ordenados
 
-            fprintf(f, "0 P%d %d 1 3 1 1\n", nome, tam); // WF - Livres Ocupados
-		    fprintf(f, "0 P%d %d 1 3 2 1\n", nome, tam); // WF - Livres 
-		    fprintf(f, "0 P%d %d 1 3 3 1\n", nome, tam); // WF - Livres Ordenados
+            fprintf(f, "0 I%d %d 1 3 1 0\n", nome, tam); // WF - Livres Ocupados
+			//fprintf(f, "0 I%d %d 1 3 2 0\n", nome, tam); // WF - Livres 
+			//fprintf(f, "0 I%d %d 1 3 3 0\n", nome, tam); // WF - Livres Ordenados
         // }
 	}
 	fclose(f);

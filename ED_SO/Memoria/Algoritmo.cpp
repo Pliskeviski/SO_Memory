@@ -19,14 +19,35 @@ Algoritmo::Algoritmo(std::string nome) : nome(nome) {
 int Algoritmo::Init(const char* filePath) {
 	if (this->CarregaProcessosArquivo(filePath) == -1) return -1;
 
+	int tam = 0;
+	int tam2 = 0;
+	
+	int c = 0;
+
 	for (Processo p : this->processos_arquivo) {
 		for(int i = 0; i < p.EspacoMemoria; i++)
 			this->Insere(&p, LISTA::NOLISTA); // Inicia os processos na memoria
+		if (p.Nome == "--")
+			tam2 += p.EspacoMemoria;
+		else
+			tam += p.EspacoMemoria;
+		
+		if (c % 20 == 0)
+			std::cout << "Carregando na memória " << c << " \n";
+
+		c++;
 	}
 	
+	std::cout << "Tamanho ocupado: " << tam << std::endl;
+	std::cout << "Tamanho livre: " << tam2 << std::endl;
+	std::cout << "Tamanho total: " << tam + tam2 << std::endl;
+
 	return 0;
 }
 
+/*
+	Insere o Processo no conteudo Node
+*/
 Node* Algoritmo::InserePosicao(Processo* p, Node* node) {
 	Node* primeiro = NULL;
 	for (int i = 0; i < p->EspacoMemoria; i++) {
@@ -60,10 +81,12 @@ int Algoritmo::CarregaProcessosArquivo(const char* filePath, int max_itens) {
 	int  espac;
 	int  alloc;
 
-	for (; std::fscanf(file, "%s %d %d", nome, &espac, &alloc) != -1; this->processos_arquivo.insert(this->processos_arquivo.begin(), Processo(nome, alloc, espac)))
+	for (; std::fscanf(file, "%s %d %d", nome, &espac, &alloc) != -1; this->processos_arquivo.insert(this->processos_arquivo.begin(), Processo(nome, alloc, espac))) 
 		if (max_itens > 0 && this->processos_arquivo.size() >= max_itens) break;
 
 	fclose(file);
+
+	std::reverse(this->processos_arquivo.begin(), this->processos_arquivo.end());
 
 	return 0;
 }
@@ -198,27 +221,29 @@ void Algoritmo::OrganizaOcupadasOrdem() {
 
 double Algoritmo::Insere(Processo* p, LISTA lista, bool somenteProcura) {
 	Processo* processo = NULL;
-	
-	if(p != NULL && p->Nome != "--")
+
+	if (p != NULL && p->Nome != "--")
 		processo = new Processo(p->Nome.c_str(), p->Alocacao, p->EspacoMemoria);
 
-	Meditor tempo; 
+	Meditor tempo;
 
 	void* retorno = NULL;
 
-	if(lista == LISTA::NOLISTA)
+	if (lista == LISTA::NOLISTA)
 		retorno = (void*)this->l_memoria_principal->Inserir(processo); // Processo vai ser inserido no fim da lista
 	else {
-		std::cout << "Inserindo processo " << p->Nome << std::endl;
+		//std::cout << "Inserindo processo " << p->Nome << std::endl;
 		retorno = this->InsereProcesso(processo, lista, somenteProcura);
 	}
 
-	auto t = tempo.Fim();
 
-	if(retorno != NULL)
+	if (retorno != NULL && lista != LISTA::NOLISTA) {
+		auto t = tempo.Fim();
 		this->OrganizaListas();
-
-	return t;
+		return t;
+	}
+	else
+		return 0;
 }
 
 double Algoritmo::RemoveNome(const char* nome) {
@@ -229,7 +254,7 @@ double Algoritmo::RemoveNome(const char* nome) {
 	if(removido)
 		this->OrganizaListas();
 	else {
-		std::cout << "Nao foi possivel remover o processo!\n";
+		//std::cout << "Nao foi possivel remover o processo!\n";
 		return -1;
 	}
 
@@ -240,7 +265,7 @@ double Algoritmo::RemoveNome(const char* nome) {
 int Algoritmo::Remove() {
 	auto node = this->l_livres_ordenada->get(0);
 	if (node == NULL) {
-		std::cout << "Nenhuma posicao livre para exclusao\n";
+		//std::cout << "Nenhuma posicao livre para exclusao\n";
 		return -1;
 	}
 	else {

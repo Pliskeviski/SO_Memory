@@ -45,8 +45,4 @@ private:
 	Algoritmo* RecuperaAlgoritmo(int alg = -1);
 
 	std::vector<Algoritmo*> m_Algoritmos;
-
-	//FirstFit* firstFit;
-	//BestFit* bestFit;
-	//WorstFit* worstFit;
 };
