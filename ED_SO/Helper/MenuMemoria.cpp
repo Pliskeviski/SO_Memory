@@ -37,8 +37,7 @@ MenuMemoria::MenuMemoria(std::string arquivo) {
 }
 
 MenuMemoria::~MenuMemoria() {
-	//for (auto alg : this->m_Algoritmos)
-	//	delete &alg;
+	// TODO: delete nos algorimos
 }
 
 void MenuMemoria::NovoProcesso(void* p) {
@@ -440,7 +439,7 @@ Algoritmo* MenuMemoria::RecuperaAlgoritmo(int alg) {
 		opcao--;
 
 		if (opcao < 0 || opcao >= this->m_Algoritmos.size()) {
-			std::cout << "Opção inválida, tenta novamente.\n";
+			std::cout << "OpÃ§Ã£o invÃ¡lida, tenta novamente.\n";
 			std::cin.get();
 		}
 		else {
