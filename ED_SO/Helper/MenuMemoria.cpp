@@ -311,7 +311,7 @@ void MenuMemoria::ExportarResultados(void* p) {
 		Algoritmo* alg = this->RecuperaAlgoritmo(i);
 
 		for (int j = 1; j < 4; j++) {
-			if (i != 1) continue;
+			//if (i != 1) continue;
 
 			std::ofstream arquivo;
 			std::string nome_arq = nome_arquivo.c_str();

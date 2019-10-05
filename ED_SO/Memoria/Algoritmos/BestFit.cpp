@@ -29,8 +29,8 @@ void* BestFit::InsereProcesso(Processo* p, LISTA lista, bool somenteProcura) {
 			Node* node = this->l_livres->get(i);
 			EspacoMemoria* espaco = (EspacoMemoria*)node->conteudo;
 			
-			if (espaco->sequencia < melhorSequencia || melhorSequencia == -1 && espaco->sequencia >= p->EspacoMemoria) {
-				melhorPos = espaco->node;
+			if ((espaco->sequencia < melhorSequencia || melhorSequencia == -1) && espaco->sequencia >= p->EspacoMemoria && espaco->node->conteudo == NULL) {
+				melhorPos = ((EspacoMemoria*)node->conteudo)->node;
 				melhorSequencia = espaco->sequencia;
 			}
 		}

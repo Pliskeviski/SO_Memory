@@ -19,29 +19,11 @@ Algoritmo::Algoritmo(std::string nome) : nome(nome) {
 int Algoritmo::Init(const char* filePath) {
 	if (this->CarregaProcessosArquivo(filePath) == -1) return -1;
 
-	int tam = 0;
-	int tam2 = 0;
-	
-	int c = 0;
-
 	for (Processo p : this->processos_arquivo) {
 		for(int i = 0; i < p.EspacoMemoria; i++)
 			this->Insere(&p, LISTA::NOLISTA); // Inicia os processos na memoria
-		if (p.Nome == "--")
-			tam2 += p.EspacoMemoria;
-		else
-			tam += p.EspacoMemoria;
-		
-		if (c % 20 == 0)
-			std::cout << "Carregando na memória " << c << " \n";
-
-		c++;
 	}
 	
-	std::cout << "Tamanho ocupado: " << tam << std::endl;
-	std::cout << "Tamanho livre: " << tam2 << std::endl;
-	std::cout << "Tamanho total: " << tam + tam2 << std::endl;
-
 	return 0;
 }
 

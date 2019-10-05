@@ -1,75 +1,303 @@
-# Algoritmo: 1 - FirstFit; 2 - BestFit; 3 - WorstFit
-# Listas: 1 - Livres Ocupados; 2 - Livres; 3 - Livres Ordenadas
-# Operacoes: 0 - Insercao; 1 - Remocao; 4 - Expancao Memoria; 5 - Reducao Memoria
-
-# Insercao 
-# 0 Nome Tamanho Alocacao(1/0) Algoritmo Lista SomenteLeitura
-
-# 0 P5 340 1 2 0 0 # -> Exemplo insercao
-
-# -------
-
-# Remocao
-# 1 Nome Algoritmo
-
-# 1 P2 1 # -> Exemplo remocao
-
-# -------
-
-# Expandir Memoria
-# 4 Algoritmo
-
-# 4 1 # -> Exemplo expansao de memoria
-
-# -------
-
-# Reducao Memoria
-# 5 Algoritmo
-
-# 5 1 # -> Exemplo reducao de memoria
-
-
-#  || Exemplo de execucao ||
-#  \/					  \/
-
-## First Fit
-0 FF 25 1 1 1 1 # -> Insere FF tamanho 25, dinamica, usando first fit na lista livre ocupados, insercao (somente leitura)
-0 FF 25 1 1 2 1 # -> Insere FF tamanho 25, dinamica, usando first fit na lista livre, insercao (somente leitura)
-0 FF 25 1 1 3 1 # -> Insere FF tamanho 25, dinamica, usando first fit na lista livre ordenado, insercao (somente leitura)
-
-0 FF 35 1 1 1 1 # -> Insere FF tamanho 35, dinamica, usando first fit na lista livre ocupados, insercao (somente leitura)
-0 FF 35 1 1 2 1 # -> Insere FF tamanho 35, dinamica, usando first fit na lista livre, insercao (somente leitura)
-0 FF 35 1 1 3 1 # -> Insere FF tamanho 35, dinamica, usando first fit na lista livre ordenado, insercao (somente leitura)
-
-0 FF 5 1 1 1 1 # -> Insere FF tamanho 5, dinamica, usando first fit na lista livre ocupados, insercao (somente leitura)
-0 FF 5 1 1 2 1 # -> Insere FF tamanho 5, dinamica, usando first fit na lista livre, insercao (somente leitura)
-0 FF 5 1 1 3 1 # -> Insere FF tamanho 5, dinamica, usando first fit na lista livre ordenado, insercao (somente leitura)
-## Fim First Fit
-
-# Best Fit
-0 FF 25 1 2 1 1 # -> Insere FF tamanho 25, dinamica, usando first fit na lista livre ocupados, insercao (somente leitura)
-0 FF 25 1 2 2 1 # -> Insere FF tamanho 25, dinamica, usando first fit na lista livre, insercao (somente leitura)
-0 FF 25 1 2 3 1 # -> Insere FF tamanho 25, dinamica, usando first fit na lista livre ordenado, insercao (somente leitura)
-
-0 FF 35 1 2 1 1 # -> Insere FF tamanho 35, dinamica, usando first fit na lista livre ocupados, insercao (somente leitura)
-0 FF 35 1 2 2 1 # -> Insere FF tamanho 35, dinamica, usando first fit na lista livre, insercao (somente leitura)
-0 FF 35 1 2 3 1 # -> Insere FF tamanho 35, dinamica, usando first fit na lista livre ordenado, insercao (somente leitura)
-
-0 FF 5 1 2 1 1 # -> Insere FF tamanho 5, dinamica, usando first fit na lista livre ocupados, insercao (somente leitura)
-0 FF 5 1 2 2 1 # -> Insere FF tamanho 5, dinamica, usando first fit na lista livre, insercao (somente leitura)
-0 FF 5 1 2 3 1 # -> Insere FF tamanho 5, dinamica, usando first fit na lista livre ordenado, insercao (somente leitura)
-# Fim Best Fit
-
-# Worst Fit
-0 FF 25 1 3 1 1 # -> Insere FF tamanho 25, dinamica, usando first fit na lista livre ocupados, insercao (somente leitura)
-0 FF 25 1 3 2 1 # -> Insere FF tamanho 25, dinamica, usando first fit na lista livre, insercao (somente leitura)
-0 FF 25 1 3 3 1 # -> Insere FF tamanho 25, dinamica, usando first fit na lista livre ordenado, insercao (somente leitura)
-
-0 FF 35 1 3 1 1 # -> Insere FF tamanho 35, dinamica, usando first fit na lista livre ocupados, insercao (somente leitura)
-0 FF 35 1 3 2 1 # -> Insere FF tamanho 35, dinamica, usando first fit na lista livre, insercao (somente leitura)
-0 FF 35 1 3 3 1 # -> Insere FF tamanho 35, dinamica, usando first fit na lista livre ordenado, insercao (somente leitura)
-
-0 FF 5 1 3 1 1 # -> Insere FF tamanho 5, dinamica, usando first fit na lista livre ocupados, insercao (somente leitura)
-0 FF 5 1 3 2 1 # -> Insere FF tamanho 5, dinamica, usando first fit na lista livre, insercao (somente leitura)
-0 FF 5 1 3 3 1 # -> Insere FF tamanho 5, dinamica, usando first fit na lista livre ordenado, insercao (somente leitura)
-# Fim Worst Fit
+0 I92 5 1 1 1 0
+0 I92 5 1 2 1 0
+0 I92 5 1 3 1 0
+0 I68 2 1 1 1 0
+0 I68 2 1 2 1 0
+0 I68 2 1 3 1 0
+0 I59 5 1 1 1 0
+0 I59 5 1 2 1 0
+0 I59 5 1 3 1 0
+0 I64 10 1 1 1 0
+0 I64 10 1 2 1 0
+0 I64 10 1 3 1 0
+0 I7 4 1 1 1 0
+0 I7 4 1 2 1 0
+0 I7 4 1 3 1 0
+0 I74 8 1 1 1 0
+0 I74 8 1 2 1 0
+0 I74 8 1 3 1 0
+0 I20 4 1 1 1 0
+0 I20 4 1 2 1 0
+0 I20 4 1 3 1 0
+0 I31 9 1 1 1 0
+0 I31 9 1 2 1 0
+0 I31 9 1 3 1 0
+0 I15 1 1 1 1 0
+0 I15 1 1 2 1 0
+0 I15 1 1 3 1 0
+0 I33 6 1 1 1 0
+0 I33 6 1 2 1 0
+0 I33 6 1 3 1 0
+0 I57 5 1 1 1 0
+0 I57 5 1 2 1 0
+0 I57 5 1 3 1 0
+0 I56 5 1 1 1 0
+0 I56 5 1 2 1 0
+0 I56 5 1 3 1 0
+0 I20 8 1 1 1 0
+0 I20 8 1 2 1 0
+0 I20 8 1 3 1 0
+0 I6 1 1 1 1 0
+0 I6 1 1 2 1 0
+0 I6 1 1 3 1 0
+0 I93 6 1 1 1 0
+0 I93 6 1 2 1 0
+0 I93 6 1 3 1 0
+0 I76 7 1 1 1 0
+0 I76 7 1 2 1 0
+0 I76 7 1 3 1 0
+0 I44 7 1 1 1 0
+0 I44 7 1 2 1 0
+0 I44 7 1 3 1 0
+0 I1 9 1 1 1 0
+0 I1 9 1 2 1 0
+0 I1 9 1 3 1 0
+0 I84 4 1 1 1 0
+0 I84 4 1 2 1 0
+0 I84 4 1 3 1 0
+0 I59 8 1 1 1 0
+0 I59 8 1 2 1 0
+0 I59 8 1 3 1 0
+0 I10 8 1 1 1 0
+0 I10 8 1 2 1 0
+0 I10 8 1 3 1 0
+0 I14 6 1 1 1 0
+0 I14 6 1 2 1 0
+0 I14 6 1 3 1 0
+0 I57 3 1 1 1 0
+0 I57 3 1 2 1 0
+0 I57 3 1 3 1 0
+0 I87 2 1 1 1 0
+0 I87 2 1 2 1 0
+0 I87 2 1 3 1 0
+0 I26 2 1 1 1 0
+0 I26 2 1 2 1 0
+0 I26 2 1 3 1 0
+0 I0 8 1 1 1 0
+0 I0 8 1 2 1 0
+0 I0 8 1 3 1 0
+0 I96 3 1 1 1 0
+0 I96 3 1 2 1 0
+0 I96 3 1 3 1 0
+0 I86 10 1 1 1 0
+0 I86 10 1 2 1 0
+0 I86 10 1 3 1 0
+0 I34 6 1 1 1 0
+0 I34 6 1 2 1 0
+0 I34 6 1 3 1 0
+0 I17 8 1 1 1 0
+0 I17 8 1 2 1 0
+0 I17 8 1 3 1 0
+0 I69 7 1 1 1 0
+0 I69 7 1 2 1 0
+0 I69 7 1 3 1 0
+0 I82 3 1 1 1 0
+0 I82 3 1 2 1 0
+0 I82 3 1 3 1 0
+0 I26 10 1 1 1 0
+0 I26 10 1 2 1 0
+0 I26 10 1 3 1 0
+0 I59 3 1 1 1 0
+0 I59 3 1 2 1 0
+0 I59 3 1 3 1 0
+0 I40 8 1 1 1 0
+0 I40 8 1 2 1 0
+0 I40 8 1 3 1 0
+0 I48 4 1 1 1 0
+0 I48 4 1 2 1 0
+0 I48 4 1 3 1 0
+0 I38 2 1 1 1 0
+0 I38 2 1 2 1 0
+0 I38 2 1 3 1 0
+0 I63 5 1 1 1 0
+0 I63 5 1 2 1 0
+0 I63 5 1 3 1 0
+0 I9 4 1 1 1 0
+0 I9 4 1 2 1 0
+0 I9 4 1 3 1 0
+0 I48 5 1 1 1 0
+0 I48 5 1 2 1 0
+0 I48 5 1 3 1 0
+0 I58 6 1 1 1 0
+0 I58 6 1 2 1 0
+0 I58 6 1 3 1 0
+0 I73 2 1 1 1 0
+0 I73 2 1 2 1 0
+0 I73 2 1 3 1 0
+0 I34 5 1 1 1 0
+0 I34 5 1 2 1 0
+0 I34 5 1 3 1 0
+0 I96 6 1 1 1 0
+0 I96 6 1 2 1 0
+0 I96 6 1 3 1 0
+0 I75 7 1 1 1 0
+0 I75 7 1 2 1 0
+0 I75 7 1 3 1 0
+0 I15 8 1 1 1 0
+0 I15 8 1 2 1 0
+0 I15 8 1 3 1 0
+0 I22 4 1 1 1 0
+0 I22 4 1 2 1 0
+0 I22 4 1 3 1 0
+0 I24 2 1 1 1 0
+0 I24 2 1 2 1 0
+0 I24 2 1 3 1 0
+0 I80 3 1 1 1 0
+0 I80 3 1 2 1 0
+0 I80 3 1 3 1 0
+0 I74 1 1 1 1 0
+0 I74 1 1 2 1 0
+0 I74 1 1 3 1 0
+0 I52 8 1 1 1 0
+0 I52 8 1 2 1 0
+0 I52 8 1 3 1 0
+0 I48 4 1 1 1 0
+0 I48 4 1 2 1 0
+0 I48 4 1 3 1 0
+0 I44 1 1 1 1 0
+0 I44 1 1 2 1 0
+0 I44 1 1 3 1 0
+0 I77 2 1 1 1 0
+0 I77 2 1 2 1 0
+0 I77 2 1 3 1 0
+0 I69 9 1 1 1 0
+0 I69 9 1 2 1 0
+0 I69 9 1 3 1 0
+0 I58 6 1 1 1 0
+0 I58 6 1 2 1 0
+0 I58 6 1 3 1 0
+0 I50 10 1 1 1 0
+0 I50 10 1 2 1 0
+0 I50 10 1 3 1 0
+0 I95 3 1 1 1 0
+0 I95 3 1 2 1 0
+0 I95 3 1 3 1 0
+0 I67 6 1 1 1 0
+0 I67 6 1 2 1 0
+0 I67 6 1 3 1 0
+0 I26 7 1 1 1 0
+0 I26 7 1 2 1 0
+0 I26 7 1 3 1 0
+0 I62 8 1 1 1 0
+0 I62 8 1 2 1 0
+0 I62 8 1 3 1 0
+0 I84 5 1 1 1 0
+0 I84 5 1 2 1 0
+0 I84 5 1 3 1 0
+0 I63 9 1 1 1 0
+0 I63 9 1 2 1 0
+0 I63 9 1 3 1 0
+0 I7 3 1 1 1 0
+0 I7 3 1 2 1 0
+0 I7 3 1 3 1 0
+0 I38 1 1 1 1 0
+0 I38 1 1 2 1 0
+0 I38 1 1 3 1 0
+0 I99 8 1 1 1 0
+0 I99 8 1 2 1 0
+0 I99 8 1 3 1 0
+0 I49 1 1 1 1 0
+0 I49 1 1 2 1 0
+0 I49 1 1 3 1 0
+0 I4 2 1 1 1 0
+0 I4 2 1 2 1 0
+0 I4 2 1 3 1 0
+0 I92 8 1 1 1 0
+0 I92 8 1 2 1 0
+0 I92 8 1 3 1 0
+0 I51 10 1 1 1 0
+0 I51 10 1 2 1 0
+0 I51 10 1 3 1 0
+0 I38 9 1 1 1 0
+0 I38 9 1 2 1 0
+0 I38 9 1 3 1 0
+0 I67 10 1 1 1 0
+0 I67 10 1 2 1 0
+0 I67 10 1 3 1 0
+0 I14 2 1 1 1 0
+0 I14 2 1 2 1 0
+0 I14 2 1 3 1 0
+0 I62 2 1 1 1 0
+0 I62 2 1 2 1 0
+0 I62 2 1 3 1 0
+0 I33 3 1 1 1 0
+0 I33 3 1 2 1 0
+0 I33 3 1 3 1 0
+0 I13 6 1 1 1 0
+0 I13 6 1 2 1 0
+0 I13 6 1 3 1 0
+0 I6 10 1 1 1 0
+0 I6 10 1 2 1 0
+0 I6 10 1 3 1 0
+0 I82 9 1 1 1 0
+0 I82 9 1 2 1 0
+0 I82 9 1 3 1 0
+0 I12 7 1 1 1 0
+0 I12 7 1 2 1 0
+0 I12 7 1 3 1 0
+0 I31 6 1 1 1 0
+0 I31 6 1 2 1 0
+0 I31 6 1 3 1 0
+0 I52 3 1 1 1 0
+0 I52 3 1 2 1 0
+0 I52 3 1 3 1 0
+0 I66 1 1 1 1 0
+0 I66 1 1 2 1 0
+0 I66 1 1 3 1 0
+0 I85 2 1 1 1 0
+0 I85 2 1 2 1 0
+0 I85 2 1 3 1 0
+0 I8 6 1 1 1 0
+0 I8 6 1 2 1 0
+0 I8 6 1 3 1 0
+0 I80 7 1 1 1 0
+0 I80 7 1 2 1 0
+0 I80 7 1 3 1 0
+0 I15 5 1 1 1 0
+0 I15 5 1 2 1 0
+0 I15 5 1 3 1 0
+0 I89 6 1 1 1 0
+0 I89 6 1 2 1 0
+0 I89 6 1 3 1 0
+0 I56 9 1 1 1 0
+0 I56 9 1 2 1 0
+0 I56 9 1 3 1 0
+0 I1 4 1 1 1 0
+0 I1 4 1 2 1 0
+0 I1 4 1 3 1 0
+0 I72 5 1 1 1 0
+0 I72 5 1 2 1 0
+0 I72 5 1 3 1 0
+0 I29 9 1 1 1 0
+0 I29 9 1 2 1 0
+0 I29 9 1 3 1 0
+0 I95 7 1 1 1 0
+0 I95 7 1 2 1 0
+0 I95 7 1 3 1 0
+0 I6 8 1 1 1 0
+0 I6 8 1 2 1 0
+0 I6 8 1 3 1 0
+0 I91 2 1 1 1 0
+0 I91 2 1 2 1 0
+0 I91 2 1 3 1 0
+0 I68 2 1 1 1 0
+0 I68 2 1 2 1 0
+0 I68 2 1 3 1 0
+0 I32 2 1 1 1 0
+0 I32 2 1 2 1 0
+0 I32 2 1 3 1 0
+0 I95 3 1 1 1 0
+0 I95 3 1 2 1 0
+0 I95 3 1 3 1 0
+0 I38 7 1 1 1 0
+0 I38 7 1 2 1 0
+0 I38 7 1 3 1 0
+0 I92 1 1 1 1 0
+0 I92 1 1 2 1 0
+0 I92 1 1 3 1 0
+0 I59 4 1 1 1 0
+0 I59 4 1 2 1 0
+0 I59 4 1 3 1 0
+0 I84 1 1 1 1 0
+0 I84 1 1 2 1 0
+0 I84 1 1 3 1 0
